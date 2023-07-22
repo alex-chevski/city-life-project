@@ -1,0 +1,72 @@
+version: "3.7"
+services:
+  api:
+    build:
+      context: ./api/docker
+      dockerfile: development/nginx/Dockerfile
+    ports:
+      - "8081:80"
+    volumes:
+      - ./api:/app
+    depends_on:
+      - api-php-fpm
+
+  api-php-fpm:
+    build:
+      context: ./api/docker
+      dockerfile: development/php-fpm/Dockerfile
+    environment:
+      APP_ENV: dev
+      APP_DEBUG: 1
+      PHP_IDE_CONFIG: serverName=API
+      DB_HOST: api-postgres
+      DB_USER: app
+      DB_PASSWORD: secret
+      DB_NAME: app
+    volumes:
+      - ./api:/app
+    depends_on:
+      - api-postgres
+      - redis
+
+  api-php-cli:
+    build:
+      context: ./api/docker
+      dockerfile: development/php-cli/Dockerfile
+    environment:
+      APP_ENV: dev
+      APP_DEBUG: 1
+      DB_HOST: api-postgres
+      DB_USER: app
+      DB_PASSWORD: secret
+      DB_NAME: app
+      # PHP_IDE_CONFIG: serverName=API
+    volumes:
+      - ./api:/app
+
+  api-node:
+    build:
+      context: api/docker/development/node
+    volumes:
+      - ./api:/app
+    command: sh -c "until [ -f .ready ] ; do sleep 1 ; done && yarn start"
+    tty: true
+
+  api-node-cli:
+    build:
+      context: api/docker/development/node
+    volumes:
+      - ./api:/app
+
+  api-postgres:
+    image: postgres:alpine3.18
+    environment:
+        POSTGRES_USER: app
+        POSTGRES_PASSWORD: secret
+        POSTGRES_DB: app
+    volumes:
+        - api-postgres:/var/lib/postgresql/data
+    ports:
+        - "54321:5432"
+volumes:
+  api-postgres:
