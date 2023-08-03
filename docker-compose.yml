@@ -1,5 +1,14 @@
 version: "3.7"
 services:
+  frontend:
+    build:
+      context: ./frontend/docker
+      dockerfile: development/nginx/Dockerfile
+    ports:
+      - "8080:80"
+    volumes:
+      - ./frontend:/app
+
   api:
     build:
       context: ./api/docker
@@ -68,5 +77,19 @@ services:
         - api-postgres:/var/lib/postgresql/data
     ports:
         - "54321:5432"
+
+  mailer:
+      image: mailhog/mailhog
+      ports:
+        - "8082:8025"
+
+
+  redis:
+      image: redis:alpine3.18
+      ports:
+        - "63791:6379"
+
+
+
 volumes:
   api-postgres:
