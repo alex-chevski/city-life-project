@@ -20,5 +20,9 @@ final class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->publishes([
+            __DIR__ . '/../../vendor/laravel/framework/src/Illuminate/Mail/resources/views/html/header.blade.php' => resource_path('views/html/layout.blade.php'),
+            __DIR__ . '/../../vendor/laravel/framework/src/Illuminate/Mail/resources/views/text/layout.blade.php' => resource_path('views/text/layout.blade.php'),
+        ], 'mail_view_override');
     }
 }
