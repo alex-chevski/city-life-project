@@ -25,22 +25,37 @@
             <th>ID</th><td>{{ $user->id }}</td>
         </tr>
         <tr>
-            <th>Name</th><td>{{ $user->name }}</td>
+            <th>Имя</th><td>{{ $user->name }}</td>
         </tr>
         <tr>
-            <th>Email</th><td>{{ $user->email }}</td>
+            <th>Электронная почта</th><td>{{ $user->email }}</td>
         </tr>
+
         <tr>
-            <th>Status</th>
+            <th>Статус</th>
             <td>
                 @if ($user->isWait())
-                    <span class="badge badge-secondary">Waiting</span>
+                    <span class="badge text-bg-secondary">Waiting</span>
                 @endif
                 @if ($user->isActive())
-                    <span class="badge badge-primary">Active</span>
+                    <span class="badge text-bg-primary">Active</span>
                 @endif
             </td>
         </tr>
+
+
+        <tr>
+            <th>Роль</th>
+            <td>
+                @if ($user->isAdmin())
+                    <span class="badge text-bg-danger text-light">Admin</span>
+                @else
+                    <span class="badge text-bg-secondary">User</span>
+                @endif
+            </td>
+        </tr>
+
+
         <tbody>
         </tbody>
     </table>
