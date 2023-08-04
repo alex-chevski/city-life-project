@@ -11,6 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use InvalidArgumentException;
 
 /**
  * @property int $id
@@ -19,6 +20,7 @@ use Illuminate\Support\Str;
  * @property string $password
  * @property string $verify_token
  * @property string $status
+ * @protected string $role
  */
 class User extends Authenticatable
 {
@@ -28,8 +30,11 @@ class User extends Authenticatable
     public const STATUS_WAIT = 'wait';
     public const STATUS_ACTIVE = 'active';
 
+    public const ROLE_USER = 'user';
+    public const ROLE_ADMIN = 'admin';
+
     protected $fillable = [
-        'name', 'email', 'password', 'verify_token', 'status',
+        'name', 'email', 'password', 'verify_token', 'status', 'role',
     ];
 
     protected $hidden = [
@@ -44,18 +49,20 @@ class User extends Authenticatable
             'password' => Hash::make($password),
             'verify_token' => Str::uuid()->toString(),
             'status' => self::STATUS_WAIT,
+            'role' => self::ROLE_USER,
         ]);
     }
 
-    public static function new($name, $email): self
-    {
-        return static::create([
-            'name' => $name,
-            'email' => $email,
-            'password' => Hash::make(Str::random()),
-            'status' => self::STATUS_ACTIVE,
-        ]);
-    }
+    // public static function new($name, $email): self
+    // {
+    //     return static::create([
+    //         'name' => $name,
+    //         'email' => $email,
+    //         'password' => Hash::make(Str::random()),
+    //         'status' => self::STATUS_ACTIVE,
+    //     ]);
+    // }
+    //
 
     public function isWait(): bool
     {
@@ -65,6 +72,11 @@ class User extends Authenticatable
     public function isActive(): bool
     {
         return $this->status === self::STATUS_ACTIVE;
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === self::ROLE_ADMIN;
     }
 
     public function verify(): void
@@ -77,6 +89,26 @@ class User extends Authenticatable
             'status' => self::STATUS_ACTIVE,
             'verify_token' => null,
         ]);
+    }
+
+    /**
+     * undocumented function.
+     *
+     * @param mixed $role
+     */
+    public function changeRole($role): void
+    {
+        if (!\in_array($role, [self::ROLE_USER, self::ROLE_ADMIN], true)) {
+            throw new InvalidArgumentException('Undefined role "' . $role . '"');
+        }
+
+        if ($this->role === $role) {
+            throw new DomainException('Role is already assigned.');
+        }
+
+        // email change role later
+
+        $this->update(['role' => $role]);
     }
 
     public function sendPasswordResetNotification($token): void
