@@ -11,6 +11,7 @@ use App\Models\User\User;
 use App\UseCases\Auth\RegisterService;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 
 class UsersController extends Controller
 {
@@ -18,14 +19,48 @@ class UsersController extends Controller
 
     public function __construct(RegisterService $register)
     {
+        // $this->middleware('can:admin');
         $this->register = $register;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::orderByDesc('id')->paginate(20);
 
-        return view('admin.users.index', compact('users'));
+        $query = User::orderByDesc('id');
+
+        if (!empty($value = $request->get('id'))) {
+            $query->where('id', $value);
+        }
+
+        if (!empty($value = $request->get('name'))) {
+            $query->where('name', 'like', '%' . $value . '%');
+        }
+
+        if (!empty($value = $request->get('email'))) {
+            $query->where('email', 'like', '%' . $value . '%');
+        }
+
+        if (!empty($value = $request->get('status'))) {
+            $query->where('status', $value);
+        }
+
+        if (!empty($value = $request->get('role'))) {
+            $query->where('role', $value);
+        }
+
+        $users= $query->paginate(20);
+
+        $statuses = [
+            User::STATUS_WAIT => 'Waiting',
+            User::STATUS_ACTIVE => 'Active',
+        ];
+
+        $roles = [
+            User::ROLE_USER => 'User',
+            User::ROLE_ADMIN => 'Admin',
+        ];
+
+        return view('admin.users.index', compact('users', 'statuses', 'roles'));
     }
 
     public function create()
@@ -50,12 +85,22 @@ class UsersController extends Controller
 
     public function edit(User $user)
     {
-        return view('admin.users.edit', compact('user'));
+        $statuses = [
+            User::STATUS_WAIT => 'Waiting',
+            User::STATUS_ACTIVE => 'Active',
+        ];
+
+        $roles = [
+            User::ROLE_USER => 'User',
+            User::ROLE_ADMIN => 'Admin',
+        ];
+
+        return view('admin.users.edit', compact('user', 'statuses', 'roles'));
     }
 
     public function update(UpdateRequest $request, User $user)
     {
-        $user->update($request->only(['name', 'email', 'status']));
+        $user->update($request->only(['name', 'email', 'status', 'role']));
 
         return redirect()->route('admin.users.show', $user);
     }
