@@ -1,58 +1,59 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Unit\Models\User;
 
+use App\Models\User\User;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
-use App\Models\User;
+use Illuminate\Support\Str;
 
 // Test create User for himself(User)
-class RegisterTest extends TestCase
+/**
+ * @internal
+ */
+final class RegisterTest extends TestCase
 {
+    use DatabaseTransactions;
+
     private User $user;
 
-    public function setUp():void{
-
+    protected function setUp(): void
+    {
         parent::setUp();
 
-        $this->user = User::register(
-            'name', 'email', 'password',
-        );
+        $this->user = User::factory()->create(['name' => 'name', 'email' => 'email', 'password' => Str::uuid(), 'status' => 'wait']);
     }
 
-    public function tearDown():void{
-        parent::tearDown();
-        $this->user->delete();
-    }
-    public function testRequest()
+    public function testRequest(): void
     {
         self::assertNotEmpty($this->user);
 
         self::assertEquals('name', $this->user->name);
         self::assertEquals('email', $this->user->email);
 
-        // check hash password
         self::assertNotEmpty('name', $this->user->name);
         self::assertNotEquals('password', $this->user->password);
 
-        // check status
         self::assertTrue($this->user->isWait());
         self::assertFalse($this->user->isActive());
 
+        // role
+        self::assertFalse($this->user->isAdmin());
     }
 
-    public function testVerify()
+    public function testVerify(): void
     {
         $this->user->verify();
         self::assertFalse($this->user->isWait());
         self::assertTrue($this->user->isActive());
     }
 
-
-    public function testAlreadyVerified()
+    public function testAlreadyVerified(): void
     {
         $this->user->verify();
         $this->expectExceptionMessage('User is already verified.');
         $this->user->verify();
     }
-
 }

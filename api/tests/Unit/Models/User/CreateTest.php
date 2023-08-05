@@ -1,29 +1,38 @@
 <?php
 
-namespace Tests\Unit\Entity\User;
+declare(strict_types=1);
 
-use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+namespace Tests\Unit\Models\User;
+
+use App\Models\User\User;
 use Tests\TestCase;
 
-//Test create new User for Admin
-class CreateTest extends TestCase
+// Test create new User for Admin
+/**
+ * @internal
+ */
+final class CreateTest extends TestCase
 {
-    use DatabaseTransactions;
-
     public function testNew(): void
     {
-        $user = User::new(
-            $name = 'name',
-            $email = 'email'
-        );
+        $user = User::factory()->make(['name' => 'name', 'email' => 'email@gmail.com', 'status'=>'active']);
 
         self::assertNotEmpty($user);
 
-        self::assertEquals($name, $user->name);
-        self::assertEquals($email, $user->email);
+        // name
+        self::assertEquals('name', $user->name);
+
+        // email
+        self::assertStringContainsString('@', $user->email);
+        self::assertEquals('email@gmail.com', $user->email);
+
+        // hash
         self::assertNotEmpty($user->password);
 
+        // status
         self::assertTrue($user->isActive());
+
+        // role
+        self::assertFalse($user->isAdmin());
     }
 }

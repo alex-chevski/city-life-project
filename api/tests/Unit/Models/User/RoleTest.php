@@ -24,7 +24,7 @@ final class RoleTest extends TestCase
 
         $user->changeRole(User::ROLE_ADMIN);
 
-        self::assertFalse($user->isAdmin());
+        self::assertTrue($user->isAdmin());
     }
 
     /**
