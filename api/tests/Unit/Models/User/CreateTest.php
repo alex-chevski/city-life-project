@@ -15,7 +15,7 @@ final class CreateTest extends TestCase
 {
     public function testNew(): void
     {
-        $user = User::factory()->make(['name' => 'name', 'email' => 'email@gmail.com', 'status'=>'active']);
+        $user = User::factory()->make(['name' => 'name', 'email' => 'email@gmail.com', 'status'=>'active', 'role' => 'user']);
 
         self::assertNotEmpty($user);
 

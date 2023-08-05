@@ -23,7 +23,7 @@ final class RegisterTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = User::factory()->create(['name' => 'name', 'email' => 'email', 'password' => Str::uuid(), 'status' => 'wait']);
+        $this->user = User::factory()->create(['name' => 'name', 'email' => 'email', 'password' => Str::uuid(), 'status' => 'wait', 'role' => 'user']);
     }
 
     public function testRequest(): void
