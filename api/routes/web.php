@@ -18,11 +18,16 @@ Route::group(
         'prefix' => 'admin',
         'as' => 'admin.',
         'namespace' => 'App\Http\Controllers\Admin',
-        'middleware' => ['auth'],
+        'middleware' => ['auth', 'can:admin-panel'],
     ],
     static function (): void {
         Route::get('/', 'HomeController@index')->name('home');
         Route::resource('users', 'UsersController');
         Route::post('/users/{user}/verify', 'UsersController@verify')->name('users.verify');
+        Route::resource('regions', 'RegionController');
+
+        Route::group(['prefix' => 'adverts', 'as' => 'adverts.', 'namespace' => 'Adverts'], function () {
+            Route::resource('categories', 'CategoryController');
+        });
     }
 );
