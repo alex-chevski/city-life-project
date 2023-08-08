@@ -16,7 +16,6 @@ return
                     __DIR__ . '/app',
                     __DIR__ . '/bootstrap',
                     __DIR__ . '/database',
-                    __DIR__ . '/resources',
                     __DIR__ . '/routes',
                     __DIR__ . '/storage',
                     __DIR__ . '/tests',
