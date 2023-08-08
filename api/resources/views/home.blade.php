@@ -8,10 +8,10 @@
         <div class="col-md-12">
             <div class="card">
 
-                <div class="card-header">Hello</div>
+                <div class="card-header">Привет</div>
 
                 <div class="card-body">
-                    Your site
+                    Это заглушка сайта
                 </div>
             </div>
         </div>
