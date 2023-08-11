@@ -5,33 +5,35 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\ResetsPasswords;
+use App\Http\Requests\Auth\ResetPassword\PasswordRequest;
+use App\UseCases\Auth\ResetPassword\ResetService;
+use DomainException;
+use Illuminate\Http\Request;
 
 final class ResetPasswordController extends Controller
 {
-    /*
-     *
-    |--------------------------------------------------------------------------
-    | Password Reset Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller is responsible for handling password reset requests
-    | and uses a simple trait to include this behavior. You're free to
-    | explore this trait and override any methods you wish to tweak.
-    |
-    */
-
-    use ResetsPasswords;
-
-    /**
-     * Where to redirect users after resetting their password.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/';
-
-    public function __construct()
+    public function __construct(private ResetService $service)
     {
         $this->middleware('guest');
+        $this->service = $service;
+    }
+
+    public function showResetForm(Request $request)
+    {
+        $token = $request->route()->parameter('token');
+        return view('auth.passwords.reset')->with(
+            ['token' => $token]
+        );
+    }
+
+    public function reset(PasswordRequest $request)
+    {
+        try {
+            $this->service->reset($request['token'], $request['password']);
+            return redirect()->route('login')
+                ->with('success', 'Password reset success');
+        } catch (DomainException $e) {
+            return back()->with('error', $e->getMessage());
+        }
     }
 }

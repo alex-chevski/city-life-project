@@ -5,20 +5,33 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
+use App\Http\Requests\Auth\ResetPassword\EmailRequest;
+use App\UseCases\Auth\ResetPassword\RequestService;
+use DomainException;
 
 final class ForgotPasswordController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Password Reset Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller is responsible for handling password reset emails and
-    | includes a trait which assists in sending these notifications from
-    | your application to your users. Feel free to explore this trait.
-    |
-    */
+    private RequestService $service;
 
-    use SendsPasswordResetEmails;
+    public function __construct(RequestService $service)
+    {
+        $this->service = $service;
+    }
+
+    public function showLinkRequestForm()
+    {
+        return view('auth.passwords.email');
+    }
+
+    public function sendResetLinkEmail(EmailRequest $request)
+    {
+        try {
+            $this->service->requestResetLink($request['email']);
+
+            return redirect()->route('login')
+                ->with('success', 'Check your email and click on the link to reset password.');
+        } catch (DomainException $e) {
+            return back()->with('error', $e->getMessage());
+        }
+    }
 }
