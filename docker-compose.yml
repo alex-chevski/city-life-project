@@ -43,7 +43,7 @@ services:
       context: ./api/docker
       dockerfile: development/php-cli/Dockerfile
     environment:
-      APP_ENV: dev
+      # APP_ENV: dev
       APP_DEBUG: 1
       DB_HOST: api-postgres
       DB_USER: app

@@ -18,8 +18,9 @@
         </include>
     </source>
     <php>
-        <env name="APP_ENV" value="testing"/>
-        <env name="CACHE_DRIVER" value="array"/>
+        <env name="env" value="testing" force="true"/>
+        <env name="APP_ENV" value="testing" force="true"/>
+        <env name="CACHE_DRIVER" value="array" force="true"/>
         <env name="MAIL_MAILER" value="array"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SESSION_DRIVER" value="array"/>
