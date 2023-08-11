@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Requests\Auth\LoginRequest;
-use App\Models\User\User;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -42,7 +41,7 @@ final class LoginController extends Controller
             $request->session()->regenerate();
             $this->clearLoginAttempts($request);
             $user = Auth::user();
-            if ($user->status !== User::STATUS_ACTIVE) {
+            if ($user->isWait()) {
                 Auth::logout();
                 return back()->with('error', 'You need to confirm your account. Please check your email.');
             }
@@ -50,6 +49,7 @@ final class LoginController extends Controller
         }
 
         $this->incrementLoginAttempts($request);
+
         throw ValidationException::withMessages(['email' => [trans('auth.failed')]]);
     }
 

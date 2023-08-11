@@ -30,7 +30,7 @@ final class VerifyMail extends Mailable
     public function build()
     {
         return $this
-            ->subject('Signup Confirmation')
+            ->subject('Подтвердить электронную почту')
             ->markdown('mail.verify-mail', ['user'=>$this->user]);
     }
 }

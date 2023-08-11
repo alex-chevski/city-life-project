@@ -9,9 +9,9 @@ use App\Http\Requests\Admin\Users\CreateRequest;
 use App\Http\Requests\Admin\Users\UpdateRequest;
 use App\Models\User\User;
 use App\UseCases\Auth\RegisterService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 
 class UsersController extends Controller
 {
@@ -19,13 +19,11 @@ class UsersController extends Controller
 
     public function __construct(RegisterService $register)
     {
-        // $this->middleware('can:admin');
         $this->register = $register;
     }
 
     public function index(Request $request)
     {
-
         $query = User::orderByDesc('id');
 
         if (!empty($value = $request->get('id'))) {

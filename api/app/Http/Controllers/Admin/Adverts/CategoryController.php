@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin\Adverts;
 
-use App\Models\Adverts\Category;
 use App\Http\Controllers\Controller;
+use App\Models\Adverts\Category;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller

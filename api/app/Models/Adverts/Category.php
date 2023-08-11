@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models\Adverts;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Kalnoy\Nestedset\NodeTrait;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
- * Class Category
+ * Class Category.
  * @author yourname
  *
  * @property int $id
@@ -22,19 +24,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  */
 class Category extends Model
 {
-    use NodeTrait;
     use HasFactory;
-
-    protected $table = 'advert_categories';
+    use NodeTrait;
 
     public $timestamps = false;
+
+    protected $table = 'advert_categories';
 
     protected $fillable = ['name', 'slug', 'parent_id'];
 
     /**
-     * undocumented function
-     *
-     * @return void
+     * undocumented function.
      */
     public function attributes()
     {

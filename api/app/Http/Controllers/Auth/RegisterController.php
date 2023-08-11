@@ -27,10 +27,13 @@ class RegisterController extends Controller
 
     public function register(RegisterRequest $request)
     {
-        $this->service->register($request);
-
-        return redirect()->route('login')
-            ->with('success', 'Check your email and click on the link to verify.');
+        try {
+            $this->service->register($request);
+            return redirect()->route('login')
+                ->with('success', 'Check your email and click on the link to verify.');
+        } catch (DomainException $e) {
+            return back()->with('error', $e->getMessage());
+        }
     }
 
     public function verify($token)

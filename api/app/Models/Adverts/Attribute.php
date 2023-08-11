@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models\Adverts;
 
 use Illuminate\Database\Eloquent\Model;
@@ -10,9 +12,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $name
  * @property string $type
  * @property string $default
- * @property boolean $required
+ * @property bool $required
  * @property array $variants
- * @property integer $sort
+ * @property int $sort
  */
 class Attribute extends Model
 {
@@ -20,9 +22,9 @@ class Attribute extends Model
     public const TYPE_INTEGER = 'integer';
     public const TYPE_FLOAT = 'float';
 
-    protected $table = 'advert_attributes';
-
     public $timestamps = false;
+
+    protected $table = 'advert_attributes';
 
     protected $fillable = ['name', 'type', 'required', 'default', 'variants', 'sort'];
 

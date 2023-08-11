@@ -9,9 +9,7 @@ use App\Http\Controllers\Controller;
 final class HomeController extends Controller
 {
     /**
-     * undocumented function
-     *
-     * @return void
+     * undocumented function.
      */
     public function __construct()
     {

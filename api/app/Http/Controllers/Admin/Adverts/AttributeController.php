@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin\Adverts;
 
+use App\Http\Controllers\Controller;
 use App\Models\Adverts\Attribute;
 use App\Models\Adverts\Category;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 

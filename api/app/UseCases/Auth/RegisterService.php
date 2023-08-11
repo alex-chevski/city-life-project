@@ -7,6 +7,9 @@ namespace App\UseCases\Auth;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Mail\VerifyMail;
 use App\Models\User\User;
+use App\Services\Auth\Tokenizer;
+use DateTimeImmutable;
+use DateTimeZone;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Mail\Mailer as MailerInterface;
@@ -19,14 +22,22 @@ class RegisterService
 {
     private $mailer;
     private $dispatcher;
+    private $tokenizer;
+    private $user;
 
     /**
      * @param Mailer $mailer
      */
-    public function __construct(MailerInterface $mailer, Dispatcher $dispatcher)
-    {
+    public function __construct(
+        MailerInterface $mailer,
+        Dispatcher $dispatcher,
+        Tokenizer $tokenizer,
+        User $user,
+    ) {
         $this->mailer = $mailer;
         $this->dispatcher = $dispatcher;
+        $this->tokenizer = $tokenizer;
+        $this->user = $user;
     }
 
     /**
@@ -34,10 +45,11 @@ class RegisterService
      */
     public function register(RegisterRequest $request): void
     {
-        $user = User::register(
+        $user = $this->user->registerCommand(
             $request['name'],
             $request['email'],
             $request['password'],
+            $this->tokenizer->generateNew(new DateTimeImmutable('now', new DateTimeZone('Europe/Moscow'))),
         );
 
         $this->mailer->to($user->email)->send(new VerifyMail($user));
@@ -54,5 +66,7 @@ class RegisterService
         /** @var User $user */
         $user = User::findOrFail($id);
         $user->verify();
+        // You are welcome to the site dop
+        // $this->mailer->to($user->email)->send(new VerifyMail($user));
     }
 }

@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-// use Illuminate\Support\Facades\Gate;
+use App\Models\User\User;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 
 final class AuthServiceProvider extends ServiceProvider
 {
@@ -22,5 +23,6 @@ final class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Gate::define('admin-panel', static fn (User $user) => $user->isAdmin());
     }
 }
