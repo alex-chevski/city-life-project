@@ -17,6 +17,7 @@ class AddUserVerification extends Migration
         Schema::table('users', static function (Blueprint $table): void {
             $table->string('status', 16);
             $table->string('verify_token')->nullable()->unique();
+            $table->string('expires')->nullable();
         });
 
         DB::table('users')->update([
