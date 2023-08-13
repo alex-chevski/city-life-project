@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace App\Models\User;
 
 use App\Services\Auth\Tokenizer;
-use DateTimeImmutable;
-use DateTimeZone;
+use Carbon\Carbon;
 use DomainException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -17,9 +16,14 @@ use InvalidArgumentException;
 /**
  * @property int $id
  * @property string $name
+ * @property string $lastName
  * @property string $email
+ * @property string $phone
+ * @property bool $phone_verified
  * @property string $password
  * @property string $verify_token
+ * @property string $phone_verify_token
+ * @property string $phone_verify_token_expire
  * @property string $expires
  * @property string $status
  * @protected string $role
@@ -36,7 +40,7 @@ class User extends Authenticatable
     public const ROLE_ADMIN = 'admin';
 
     protected $fillable = [
-        'name', 'email', 'password', 'verify_token', 'expires', 'status', 'role',
+        'name', 'last_name', 'email', 'password', 'verify_token', 'expires', 'status', 'role',
     ];
 
     protected $hidden = [
@@ -108,14 +112,14 @@ class User extends Authenticatable
     /**
      * undocumented function.
      */
-    public function requestPasswordReset(Tokenizer $tokenizer, DateTimeImmutable $date): void
+    public function requestPasswordReset(Tokenizer $tokenizer, Carbon $date): void
     {
         if (!$this->isActive()) {
             throw new DomainException('User is not active.');
         }
 
         if (!$this->isFirstTryRequest()) {
-            $this->checkRepeatRequest($tokenizer->generateOld($this->verify_token, new DateTimeImmutable($this->expires)), $date);
+            $this->checkRepeatRequest($tokenizer->generateOld($this->verify_token, $date->copy()->setTimeFromTimeString($this->expires)), $date);
         }
 
         $token = $tokenizer->generateNew($date);
@@ -126,7 +130,7 @@ class User extends Authenticatable
         $this->update(['verify_token' => $token->getValue(), 'expires' => $token->getExpires()]);
     }
 
-    public function checkRepeatRequest(Token $token, DateTimeImmutable $date): void
+    public function checkRepeatRequest(Token $token, Carbon $date): void
     {
         if ($token->isAlreadyRequest($date)) {
             throw new DomainException('Resetting is already requested. ');
@@ -164,7 +168,7 @@ class User extends Authenticatable
     {
         $user = static::where('verify_token', $token)->first();
         if ($user === null) {
-            throw new DomainException('Token is not found. ');
+            throw new DomainException('Incorrect verify token. ');
         }
 
         return $user;
@@ -173,7 +177,7 @@ class User extends Authenticatable
     /**
      * undocumented function.
      */
-    public function resetPassword(string $token, DateTimeImmutable $date, string $hash, Token $passwordResetToken): void
+    public function resetPassword(string $token, Carbon $date, string $hash, Token $passwordResetToken): void
     {
         if ($passwordResetToken->getValue() === null) {
             throw new DomainException('Resetting is not requested. ');

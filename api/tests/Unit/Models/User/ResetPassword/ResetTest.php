@@ -6,8 +6,7 @@ namespace Tests\Unit\Models\User\ResetPassword;
 
 use App\Models\User\User;
 use App\Services\Auth\Tokenizer;
-use DateTimeImmutable;
-use DateTimeZone;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -23,23 +22,22 @@ final class ResetTest extends TestCase
     {
         parent::setUp();
         $this->tokenizer = $this->tokenizer();
+        $this->now = Carbon::now('Europe/Moscow');
     }
 
     public function testSuccess(): void
     {
         $user = User::factory()->create(['status' => User::STATUS_ACTIVE]);
 
-        $now = new DateTimeImmutable('now', new DateTimeZone('Europe/Moscow'));
-
         $tokenizer = $this->tokenizer();
 
-        $user->requestPasswordReset($tokenizer, $now);
+        $user->requestPasswordReset($tokenizer, $this->now->copy());
 
         self::assertNotNull($token = $user->getPasswordResetToken());
 
         $user->resetPassword(
             $token->getValue(),
-            $now,
+            $this->now,
             $hash = 'hash',
             $tokenizer->generateOld($token->getValue(), $token->getExpires()),
         );
@@ -50,31 +48,28 @@ final class ResetTest extends TestCase
     public function testInvalidToken(): void
     {
         $user = User::factory()->create(['status' => User::STATUS_ACTIVE]);
-        $now = new DateTimeImmutable('now', new DateTimeZone('Europe/Moscow'));
 
-        $user->requestPasswordReset($this->tokenizer, $now);
+        $user->requestPasswordReset($this->tokenizer, $this->now);
 
         $this->expectExceptionMessage('Token is invalid.');
-        $user->resetPassword(Str::uuid()->toString(), $now, 'hash', $this->tokenizer->generateOld(Str::uuid()->toString(), $now->modify('+1 hour')));
+        $user->resetPassword(Str::uuid()->toString(), $this->now, 'hash', $this->tokenizer->generateOld(Str::uuid()->toString(), $this->now->modify('+1 hour')));
     }
 
     public function testExpiredToken(): void
     {
         $user = User::factory()->create(['status' => User::STATUS_ACTIVE]);
-        $now = new DateTimeImmutable('now', new DateTimeZone('Europe/Moscow'));
-        $user->requestPasswordReset($this->tokenizer, $now->modify('+1 hour'));
+        $user->requestPasswordReset($this->tokenizer, $this->now->modify('+1 hour'));
 
         $this->expectExceptionMessage('Token is expired.');
-        $user->resetPassword($user->getPasswordResetToken()->getValue(), $now->modify('+1 day'), 'hash', $user->getPasswordResetToken());
+        $user->resetPassword($user->getPasswordResetToken()->getValue(), $this->now->modify('+1 day'), 'hash', $user->getPasswordResetToken());
     }
 
     public function testNotRequested(): void
     {
         $user = User::factory()->create(['status' => User::STATUS_ACTIVE]);
-        $now = new DateTimeImmutable('now', new DateTimeZone('Europe/Moscow'));
 
         $this->expectExceptionMessage('Token is invalid.');
-        $user->resetPassword(Str::uuid()->toString(), $now, 'hash', $this->tokenizer->generateOld(Str::uuid()->toString(), $now));
+        $user->resetPassword(Str::uuid()->toString(), $this->now, 'hash', $this->tokenizer->generateOld(Str::uuid()->toString(), $this->now));
     }
 
     private function tokenizer(): Tokenizer

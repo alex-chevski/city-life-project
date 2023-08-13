@@ -7,8 +7,7 @@ namespace App\UseCases\Auth\ResetPassword;
 use App\Mail\ResetPasswordMail;
 use App\Models\User\User;
 use App\Services\Auth\Tokenizer;
-use DateTimeImmutable;
-use DateTimeZone;
+use Carbon\Carbon;
 use Illuminate\Contracts\Mail\Mailer as MailerInterface;
 
 /**
@@ -20,6 +19,7 @@ class RequestService
     private $mailer;
     private User $user;
     private Tokenizer $tokenizer;
+    private Carbon $date;
 
     /**
      * @param Mailer $mailer
@@ -28,21 +28,21 @@ class RequestService
         MailerInterface $mailer,
         User $user,
         Tokenizer $tokenizer,
+        Carbon $date,
     ) {
         $this->mailer = $mailer;
         $this->user = $user;
         $this->tokenizer = $tokenizer;
+        $this->date = $date;
     }
 
     public function requestResetLink(string $email): void
     {
         $user = $this->user->getByEmail($email);
 
-        $date = new DateTimeImmutable('now', new DateTimeZone('Europe/Moscow'));
-
         $user->requestPasswordReset(
             $this->tokenizer,
-            $date
+            $this->date->copy()->setTimezone('Europe/Moscow'),
         );
 
         $this->mailer->to($user->email)->send(new ResetPasswordMail($user));

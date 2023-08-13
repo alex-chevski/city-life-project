@@ -6,6 +6,7 @@ namespace Tests\Feature\Auth;
 
 use App\Models\User\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 /**
@@ -51,5 +52,33 @@ final class RegisterTest extends TestCase
             ->assertStatus(302)
             ->assertRedirect('/login')
             ->assertSessionHas('success', 'Check your email and click on the link to verify.');
+    }
+
+    /**
+     * undocumented function.
+     */
+    public function testVerifyIncorrect(): void
+    {
+        $response = $this->get('/verify/' . Str::uuid());
+
+        $response
+            ->assertStatus(302)
+            ->assertRedirect('/login')
+            ->assertSessionHas('error', 'Sorry your link cannot be identified.');
+    }
+
+    public function testVerify(): void
+    {
+        $user = User::factory()->create([
+            'status' => User::STATUS_WAIT,
+            'verify_token' => Str::uuid(),
+        ]);
+
+        $response = $this->get('/verify/' . $user->verify_token);
+
+        $response
+            ->assertStatus(302)
+            ->assertRedirect('/login')
+            ->assertSessionHas('success', 'Your e-mail is verified. You can now login.');
     }
 }

@@ -6,33 +6,29 @@ namespace App\UseCases\Auth\ResetPassword;
 
 use App\Models\User\User;
 use App\Services\Auth\Tokenizer;
-use DateTimeImmutable;
-use DateTimeZone;
+use Carbon\Carbon;
 
 class ResetService
 {
-    private User $user;
-
     public function __construct(
-        User $user,
-        Tokenizer $tokenizer
+        private User $user,
+        private Tokenizer $tokenizer,
+        private Carbon $date
     ) {
         $this->user = $user;
         $this->tokenizer = $tokenizer;
+        $this->date = $date;
     }
 
     public function reset(string $token, string $password): void
     {
         $user = $this->user->findByPasswordResetToken($token);
 
-        // write in container for dependency injection later
-        $date = new DateTimeImmutable('now', new DateTimeZone('Europe/Moscow'));
-
         $user->resetPassword(
             $token,
-            $date,
+            $this->date->copy()->setTimezone('Europe/Moscow'),
             $password,
-            $this->tokenizer->generateOld($user->verify_token, new DateTimeImmutable($user->expires)),
+            $this->tokenizer->generateOld($user->verify_token, $this->date->copy()->setTimeFromTimeString($user->expires)),
         );
 
         // $this->dispatcher->dispatch(new Registered($user));

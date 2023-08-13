@@ -6,8 +6,7 @@ namespace Tests\Unit\Models\User\ResetPassword;
 
 use App\Models\User\User;
 use App\Services\Auth\Tokenizer;
-use DateTimeImmutable;
-use DateTimeZone;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
@@ -24,15 +23,14 @@ final class RequestTest extends TestCase
     {
         parent::setUp();
         $this->tokenizer = $this->tokenizer();
+        $this->now = Carbon::now('Europe/Moscow');
     }
 
     public function testSuccess(): void
     {
         $user = User::factory()->create(['status' => User::STATUS_ACTIVE]);
 
-        $now = new DateTimeImmutable('now', new DateTimeZone('Europe/Moscow'));
-
-        $user->requestPasswordReset($this->tokenizer, $now);
+        $user->requestPasswordReset($this->tokenizer, $this->now);
 
         self::assertNotNull($token = $user->getPasswordResetToken());
 
@@ -42,20 +40,18 @@ final class RequestTest extends TestCase
     public function testNotActive(): void
     {
         $user = User::factory()->create(['status' => User::STATUS_WAIT]);
-        $now = new DateTimeImmutable('now', new DateTimeZone('Europe/Moscow'));
 
         $this->expectExceptionMessage('User is not active.');
-        $user->requestPasswordReset($this->tokenizer, $now);
+        $user->requestPasswordReset($this->tokenizer, $this->now);
     }
 
     public function testExpired(): void
     {
         $user = User::factory()->create(['status' => User::STATUS_ACTIVE]);
 
-        $now = new DateTimeImmutable();
-        $user->requestPasswordReset($this->tokenizer, $now->modify('+ 1 hour'));
+        $user->requestPasswordReset($this->tokenizer, $this->now->modify('+ 1 hour'));
 
-        $newDate = $now->modify('2 hours');
+        $newDate = $this->now->modify('2 hours');
 
         $user->checkRepeatRequest($token = $user->getPasswordResetToken(), $token->getExpires(), $newDate);
 
@@ -65,12 +61,11 @@ final class RequestTest extends TestCase
     public function testAlready(): void
     {
         $user = User::factory()->create(['status' => User::STATUS_ACTIVE, 'verify_token' => null, 'expires' => null]);
-        $now = new DateTimeImmutable('now', new DateTimeZone('Europe/Moscow'));
 
-        $user->requestPasswordReset($this->tokenizer, $now);
+        $user->requestPasswordReset($this->tokenizer, $this->now->copy());
 
         $this->expectExceptionMessage('Resetting is already requested. ');
-        $user->checkRepeatRequest($user->getPasswordResetToken(), $now);
+        $user->checkRepeatRequest($user->getPasswordResetToken(), $this->now->copy());
     }
 
     private function tokenizer(): Tokenizer

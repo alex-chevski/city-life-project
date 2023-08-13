@@ -8,8 +8,7 @@ use App\Http\Requests\Auth\RegisterRequest;
 use App\Mail\VerifyMail;
 use App\Models\User\User;
 use App\Services\Auth\Tokenizer;
-use DateTimeImmutable;
-use DateTimeZone;
+use Carbon\Carbon;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Mail\Mailer as MailerInterface;
@@ -49,7 +48,7 @@ class RegisterService
             $request['name'],
             $request['email'],
             $request['password'],
-            $this->tokenizer->generateNew(new DateTimeImmutable('now', new DateTimeZone('Europe/Moscow'))),
+            $this->tokenizer->generateNew(Carbon::now('Europe/Moscow')),
         );
 
         $this->mailer->to($user->email)->send(new VerifyMail($user));

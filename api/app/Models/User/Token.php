@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models\User;
 
-use DateTimeImmutable;
+use Carbon\Carbon;
 use DomainException;
 use Webmozart\Assert\Assert;
 
@@ -14,19 +14,21 @@ use Webmozart\Assert\Assert;
  */
 class Token
 {
-    public function __construct(private string $value, private DateTimeImmutable $expires)
-    {
+    public function __construct(
+        private string $value,
+        private Carbon $expires
+    ) {
         Assert::uuid($value);
         $this->value = mb_strtolower($value);
         $this->expires = $expires;
     }
 
-    public function isExpiredTo(DateTimeImmutable $date): bool
+    public function isExpiredTo(Carbon $date): bool
     {
-        return $this->expires->format('Y-m-d H:i:s') <= $date->format('Y-m-d H:i:s');
+        return $this->expires <= $date;
     }
 
-    public function validate(string $value, DateTimeImmutable $date): void
+    public function validate(string $value, Carbon $date): void
     {
         if (!$this->isEqualTo($value)) {
             throw new DomainException('Token is invalid.');
@@ -41,12 +43,12 @@ class Token
         return $this->value;
     }
 
-    public function isAlreadyRequest(DateTimeImmutable $date)
+    public function isAlreadyRequest(Carbon $date)
     {
         return $this->value !== null && !$this->isExpiredTo($date);
     }
 
-    public function getExpires(): DateTimeImmutable
+    public function getExpires(): Carbon
     {
         return $this->expires;
     }
