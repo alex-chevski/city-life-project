@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Database\Factories\User;
 
 use App\Models\User\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -21,14 +22,20 @@ class UserFactory extends Factory
     public function definition(): array
     {
         $active = fake()->boolean;
+        $phoneActive = fake()->boolean;
+
         return [
             'name' => fake()->name(),
+            'last_name' => fake()->lastName,
             'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
+            'phone' => $phoneActive ? null : fake()->unique()->phoneNumber,
+            'phone_verified' => $phoneActive,
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
-            'verify_token' => $active ? null : Str::uuid(),
-            'expires' => null,
+            'verify_token' => $active ? null : Str::uuid()->toString(),
+            'phone_verify_token' => $phoneActive ? null : Str::uuid()->toString(),
+            'expires' => $active ? null : Carbon::now()->addSeconds(300),
+            'phone_verify_token_expire' => $phoneActive ? null : Carbon::now()->addSeconds(300),
             'role' => $active ? fake()->randomElement([User::ROLE_USER, User::ROLE_ADMIN]) : User::ROLE_USER,
             'status' => $active ? User::STATUS_ACTIVE : User::STATUS_WAIT,
         ];

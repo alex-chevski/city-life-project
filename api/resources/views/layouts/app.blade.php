@@ -59,7 +59,7 @@
                                         <a class="dropdown-item" href="{{route('admin.home')}}">Админ панель</a>
                                     @endcan
 
-                                    <a class="dropdown-item" href="{{route('cabinet')}}">Кабинет</a>
+                                    <a class="dropdown-item" href="{{route('cabinet.home')}}">Кабинет</a>
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">

@@ -42,7 +42,7 @@ class RequestService
 
         $user->requestPasswordReset(
             $this->tokenizer,
-            $this->date->copy()->setTimezone('Europe/Moscow'),
+            $this->date->copy(),
         );
 
         $this->mailer->to($user->email)->send(new ResetPasswordMail($user));

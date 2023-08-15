@@ -28,13 +28,13 @@ final class RequestTest extends TestCase
 
     public function testSuccess(): void
     {
-        $user = User::factory()->create(['status' => User::STATUS_ACTIVE]);
+        $user = User::factory()->create(['status' => User::STATUS_ACTIVE, 'verify_token' => null, 'expires' => null]);
 
         $user->requestPasswordReset($this->tokenizer, $this->now);
 
         self::assertNotNull($token = $user->getPasswordResetToken());
 
-        self::assertEquals($token, $this->tokenizer->generateOld($token->getValue(), $token->getExpires()));
+        self::assertEquals($token, $this->tokenizer->generate($token->getExpires(), 'default', $token->getValue()));
     }
 
     public function testNotActive(): void

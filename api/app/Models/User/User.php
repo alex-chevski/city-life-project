@@ -23,8 +23,8 @@ use InvalidArgumentException;
  * @property string $password
  * @property string $verify_token
  * @property string $phone_verify_token
- * @property string $phone_verify_token_expire
- * @property string $expires
+ * @property Carbon $phone_verify_token_expire
+ * @property Carbon $expires
  * @property string $status
  * @protected string $role
  */
@@ -40,11 +40,17 @@ class User extends Authenticatable
     public const ROLE_ADMIN = 'admin';
 
     protected $fillable = [
-        'name', 'last_name', 'email', 'password', 'verify_token', 'expires', 'status', 'role',
+        'name', 'last_name', 'email', 'phone', 'password', 'verify_token', 'expires', 'status', 'role',
     ];
 
     protected $hidden = [
         'password', 'remember_token',
+    ];
+
+    protected $casts = [
+        'expires' => 'datetime',
+        'phone_verified' => 'boolean',
+        'phone_verify_token_expire' => 'datetime',
     ];
 
     private $passwordResetToken;
@@ -92,7 +98,6 @@ class User extends Authenticatable
     }
 
     /**
-     * undocumented function.
      *
      * @param mixed $role
      */
@@ -114,20 +119,19 @@ class User extends Authenticatable
      */
     public function requestPasswordReset(Tokenizer $tokenizer, Carbon $date): void
     {
+
         if (!$this->isActive()) {
             throw new DomainException('User is not active.');
         }
-
-        if (!$this->isFirstTryRequest()) {
-            $this->checkRepeatRequest($tokenizer->generateOld($this->verify_token, $date->copy()->setTimeFromTimeString($this->expires)), $date);
+        if (!$this->isFirstTryRequest($typeVerify = 'mail')) {
+            $this->checkRepeatRequest($tokenizer->generate($this->expires, 'default', $this->verify_token), $date);
         }
 
-        $token = $tokenizer->generateNew($date);
-
+        $token = $tokenizer->generate($date, $typeVerify);
         // for tests
         $this->passwordResetToken = $token;
-
         $this->update(['verify_token' => $token->getValue(), 'expires' => $token->getExpires()]);
+
     }
 
     public function checkRepeatRequest(Token $token, Carbon $date): void
@@ -139,6 +143,25 @@ class User extends Authenticatable
         // for tests
         $this->passwordResetToken = $token;
     }
+
+
+    public function requestPhoneVerification(Tokenizer $tokenizer, Carbon $date){
+        if(empty($this->phone)){
+            throw new DomainException('Phone number is empty. ');
+        }
+
+        if (!$this->isFirstTryRequest($type = 'sms')) {
+            $this->checkRepeatRequest($tokenizer->generate($this->phone_verify_token_expire, 'default', $this->phone_verify_token), $date);
+        }
+
+        $token = $tokenizer->generate($date, $type);
+
+        $this->phone_verified = false;
+        $this->phone_verify_token = $token->getValue();
+        $this->phone_verify_token_expire = $token->getExpires();
+        $this->saveOrFail();
+    }
+
 
     /**
      * undocumented function.
@@ -155,35 +178,12 @@ class User extends Authenticatable
         );
     }
 
-    public function getByEmail(string $email): self
-    {
-        $user = static::where('email', $email)->first();
-        if ($user === null) {
-            throw new DomainException('User is not found.');
-        }
-        return $user;
-    }
-
-    public function findByPasswordResetToken(string $token): self
-    {
-        $user = static::where('verify_token', $token)->first();
-        if ($user === null) {
-            throw new DomainException('Incorrect verify token. ');
-        }
-
-        return $user;
-    }
-
     /**
      * undocumented function.
      */
-    public function resetPassword(string $token, Carbon $date, string $hash, Token $passwordResetToken): void
+    public function resetPassword(string $token, Carbon $now, string $hash, Token $correctTokenPrev): void
     {
-        if ($passwordResetToken->getValue() === null) {
-            throw new DomainException('Resetting is not requested. ');
-        }
-
-        $passwordResetToken->validate($token, $date);
+        $correctTokenPrev->validate($token, $now);
 
         $this->update(['verify_token' => null, 'expires' => null, 'password' => Hash::make($hash)]);
 
@@ -194,6 +194,61 @@ class User extends Authenticatable
     /**
      * undocumented function.
      */
+    public function unverifyPhone(): void
+    {
+
+        $this->phone_verified = false;
+        $this->phone_verify_token = null;
+        $this->phone_verify_token_expire = null;
+        $this->saveOrFail();
+
+    }
+
+    public function verifyPhone(string $token, Carbon $now, Token $correctTokenPrev): void
+    {
+        $correctTokenPrev->validate($token, $now);
+
+        $this->phone_verified = true;
+        $this->phone_verify_token = null;
+        $this->phone_verify_token_expire = null;
+        $this->saveOrFail();
+    }
+
+    public function isPhoneVerified(): bool
+    {
+        return $this->phone_verified;
+    }
+
+
+    public function getByEmail(string $email): self
+    {
+        $user = static::where('email', $email)->first();
+        if ($user === null) {
+            throw new DomainException('User is not found.');
+        }
+        return $user;
+    }
+
+    public function getByPhone(string $phone): self
+    {
+        $user = static::where('phone', $phone)->first();
+        if ($user === null) {
+            throw new DomainException('User is not found.');
+        }
+        return $user;
+    }
+
+
+    public function getUser($id): self
+    {
+        $user = static::findOrFail($id);
+        if ($user === null) {
+            throw new DomainException('User is not found.');
+        }
+        return $user;
+    }
+
+
     public function getPasswordHash(): string
     {
         return $this->passwordHash;
@@ -204,8 +259,24 @@ class User extends Authenticatable
         return $this->passwordResetToken;
     }
 
-    private function isFirstTryRequest()
+    public function findByPasswordResetToken(string $token): self
     {
-        return !($this->verify_token && $this->expires);
+        $user = static::where('verify_token', $token)->first();
+        if ($user === null) {
+            throw new DomainException('Incorrect verify token. ');
+        }
+        return $user;
+    }
+
+    private function isFirstTryRequest(string $type)
+    {
+        switch($type){
+            case 'sms':
+                return !($this->phone_verify_token && $this->phone_verify_token_expire);
+            case 'mail':
+                return !($this->verify_token && $this->expires);
+            default:
+                throw new InvalidArgumentException('Undefined type request. ');
+        }
     }
 }

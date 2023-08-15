@@ -26,9 +26,9 @@ class ResetService
 
         $user->resetPassword(
             $token,
-            $this->date->copy()->setTimezone('Europe/Moscow'),
+            $this->date->copy(),
             $password,
-            $this->tokenizer->generateOld($user->verify_token, $this->date->copy()->setTimeFromTimeString($user->expires)),
+            $this->tokenizer->generate($user->expires, 'default', $user->verify_token),
         );
 
         // $this->dispatcher->dispatch(new Registered($user));

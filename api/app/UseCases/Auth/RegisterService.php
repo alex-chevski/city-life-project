@@ -23,6 +23,7 @@ class RegisterService
     private $dispatcher;
     private $tokenizer;
     private $user;
+    private $date;
 
     /**
      * @param Mailer $mailer
@@ -31,12 +32,14 @@ class RegisterService
         MailerInterface $mailer,
         Dispatcher $dispatcher,
         Tokenizer $tokenizer,
+        Carbon $date,
         User $user,
     ) {
         $this->mailer = $mailer;
         $this->dispatcher = $dispatcher;
         $this->tokenizer = $tokenizer;
         $this->user = $user;
+        $this->date = $date;
     }
 
     /**
@@ -48,7 +51,7 @@ class RegisterService
             $request['name'],
             $request['email'],
             $request['password'],
-            $this->tokenizer->generateNew(Carbon::now('Europe/Moscow')),
+            $this->tokenizer->generate($this->date->copy(), 'email'),
         );
 
         $this->mailer->to($user->email)->send(new VerifyMail($user));

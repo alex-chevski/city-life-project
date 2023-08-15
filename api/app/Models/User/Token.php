@@ -18,7 +18,7 @@ class Token
         private string $value,
         private Carbon $expires
     ) {
-        Assert::uuid($value);
+        // Assert::uuid($value);
         $this->value = mb_strtolower($value);
         $this->expires = $expires;
     }
@@ -33,6 +33,7 @@ class Token
         if (!$this->isEqualTo($value)) {
             throw new DomainException('Token is invalid.');
         }
+
         if ($this->isExpiredTo($date)) {
             throw new DomainException('Token is expired.');
         }

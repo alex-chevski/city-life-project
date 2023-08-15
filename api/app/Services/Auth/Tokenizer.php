@@ -18,21 +18,25 @@ class Tokenizer
     {
     }
 
-    public function generateNew(Carbon $date): Token
+    public function generate(Carbon $date,string $typeToken = null, int|string $token = null): Token
     {
-        // $interval = new DateInterval('PT5M');
+        switch ($typeToken){
+            case 'mail':
+                return new Token(
+                    Str::uuid()->toString(),
+                    $date->addSeconds(300),
+                );
+            case 'sms':
+                return new Token(
+                    (string)random_int(10000, 99999),
+                    $date->addSeconds(300),
+                );
+            default:
+                return new Token(
+                    $token ?: Str::uuid()->toString(),
+                    $date,
+                );
+        }
 
-        return new Token(
-            Str::uuid()->toString(),
-            $date->addMinutes(5),
-        );
-    }
-
-    public function generateOld(string $token, Carbon $date): Token
-    {
-        return new Token(
-            $token,
-            $date,
-        );
     }
 }

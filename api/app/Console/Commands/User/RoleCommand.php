@@ -1,9 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands\User;
 
-use Illuminate\Console\Command;
 use App\Models\User\User;
+use DomainException;
+use Illuminate\Console\Command;
+use InvalidArgumentException;
 
 class RoleCommand extends Command
 {
@@ -24,21 +28,21 @@ class RoleCommand extends Command
     /**
      * Execute the console command.
      */
-    public function handle():bool
+    public function handle(): bool
     {
         $email = $this->argument('email');
         $role = $this->argument('role');
-        if(!$user = User::where('email', $email)->first()){
+        if (!$user = User::where('email', $email)->first()) {
             $this->error('Undefined user with email' . $email);
             return false;
         }
 
-        try{
+        try {
             $user->changeRole($role);
-        }catch(\DomainException $e){
+        } catch (DomainException $e) {
             $this->error($e->getMessage());
             return false;
-        }catch(\InvalidArgumentException $e){
+        } catch (InvalidArgumentException $e) {
             $this->error($e->getMessage());
             return false;
         }

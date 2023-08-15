@@ -27,7 +27,7 @@ final class ResetTest extends TestCase
 
     public function testSuccess(): void
     {
-        $user = User::factory()->create(['status' => User::STATUS_ACTIVE]);
+        $user = User::factory()->create(['status' => User::STATUS_ACTIVE, 'verify_token' => null, 'expires' => null]);
 
         $tokenizer = $this->tokenizer();
 
@@ -39,7 +39,7 @@ final class ResetTest extends TestCase
             $token->getValue(),
             $this->now,
             $hash = 'hash',
-            $tokenizer->generateOld($token->getValue(), $token->getExpires()),
+            $tokenizer->generate($token->getExpires(), 'default', $token->getValue()),
         );
 
         self::assertEquals($hash, $user->getPasswordHash());
@@ -47,12 +47,12 @@ final class ResetTest extends TestCase
 
     public function testInvalidToken(): void
     {
-        $user = User::factory()->create(['status' => User::STATUS_ACTIVE]);
+        $user = User::factory()->create(['status' => User::STATUS_ACTIVE, 'verify_token' => null, 'expires' => null]);
 
         $user->requestPasswordReset($this->tokenizer, $this->now);
 
         $this->expectExceptionMessage('Token is invalid.');
-        $user->resetPassword(Str::uuid()->toString(), $this->now, 'hash', $this->tokenizer->generateOld(Str::uuid()->toString(), $this->now->modify('+1 hour')));
+        $user->resetPassword(Str::uuid()->toString(), $this->now, 'hash', $this->tokenizer->generate($this->now->modify('+1 hour'), 'default', Str::uuid()->toString()));
     }
 
     public function testExpiredToken(): void
@@ -69,7 +69,7 @@ final class ResetTest extends TestCase
         $user = User::factory()->create(['status' => User::STATUS_ACTIVE]);
 
         $this->expectExceptionMessage('Token is invalid.');
-        $user->resetPassword(Str::uuid()->toString(), $this->now, 'hash', $this->tokenizer->generateOld(Str::uuid()->toString(), $this->now));
+        $user->resetPassword(Str::uuid()->toString(), $this->now, 'hash', $this->tokenizer->generate($this->now, 'default', Str::uuid()->toString()));
     }
 
     private function tokenizer(): Tokenizer

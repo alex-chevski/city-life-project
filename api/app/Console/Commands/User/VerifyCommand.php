@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Console\Commands\User;
 
 use App\Models\User\User;
-use Illuminate\Console\Command;
 use App\UseCases\Auth\RegisterService;
+use Illuminate\Console\Command;
 
 class VerifyCommand extends Command
 {
@@ -34,7 +34,6 @@ class VerifyCommand extends Command
         parent::__construct();
         $this->service = $service;
     }
-
 
     /**
      * Execute the console command.

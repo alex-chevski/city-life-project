@@ -1,16 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Доска объявлений') }}</div>
-                <div class="card-body">
-                    {{ __('Вы вошли в систему!') }}
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+    <ul class="nav nav-tabs mb-3">
+        <li class="nav-item"><a class="nav-link active" href="{{ route('cabinet.home') }}">Доска объявлений</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ route('cabinet.profile.home') }}">Профиль</a></li>
+    </ul>
 @endsection
