@@ -7,7 +7,7 @@ namespace App\UseCases\Auth;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Mail\VerifyMail;
 use App\Models\User\User;
-use App\Services\Auth\Tokenizer;
+use App\Services\Auth\Tokenizer\TokenizerMail;
 use Carbon\Carbon;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Contracts\Events\Dispatcher;
@@ -23,7 +23,7 @@ class RegisterService
     private $dispatcher;
     private $tokenizer;
     private $user;
-    private $date;
+    private $now;
 
     /**
      * @param Mailer $mailer
@@ -31,15 +31,15 @@ class RegisterService
     public function __construct(
         MailerInterface $mailer,
         Dispatcher $dispatcher,
-        Tokenizer $tokenizer,
-        Carbon $date,
+        TokenizerMail $tokenizer,
+        Carbon $now,
         User $user,
     ) {
         $this->mailer = $mailer;
         $this->dispatcher = $dispatcher;
         $this->tokenizer = $tokenizer;
         $this->user = $user;
-        $this->date = $date;
+        $this->now = $now;
     }
 
     /**
@@ -51,7 +51,7 @@ class RegisterService
             $request['name'],
             $request['email'],
             $request['password'],
-            $this->tokenizer->generate($this->date->copy(), 'email'),
+            $this->tokenizer->generate($this->now->copy()),
         );
 
         $this->mailer->to($user->email)->send(new VerifyMail($user));

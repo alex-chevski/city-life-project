@@ -9,6 +9,9 @@ Route::get('/', 'App\Http\Controllers\HomeController@index')->name('home');
 
 Auth::routes();
 
+Route::get('/login/phone', 'App\Http\Controllers\Auth\LoginController@phone')->name('login.phone');
+Route::post('/login/phone', 'App\Http\Controllers\Auth\LoginController@verify');
+
 Route::get('/verify/{token}', 'App\Http\Controllers\Auth\RegisterController@verify')->name('register.verify');
 
 Route::group(
@@ -21,15 +24,18 @@ Route::group(
     static function (): void {
         Route::get('/', 'HomeController@index')->name('home');
 
-        Route::group(['prefix' => 'profile', 'as' => 'profile.'], function (){
+        Route::group(['prefix' => 'profile', 'as' => 'profile.'], static function (): void {
             Route::get('/', 'ProfileController@index')->name('home');
             Route::get('/edit', 'ProfileController@edit')->name('edit');
             Route::put('/update', 'ProfileController@update')->name('update');
             Route::post('/phone', 'PhoneController@request');
             Route::get('/phone', 'PhoneController@form')->name('phone');
             Route::put('/phone', 'PhoneController@verify')->name('phone.verify');
+
+            Route::post('/phone/auth', 'PhoneController@auth')->name('phone.auth');
         });
 
+        Route::resource('adverts', 'App\Http\Controllers\Cabinet\Adverts\AdvertController');
     }
 );
 

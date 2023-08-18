@@ -11,7 +11,7 @@ use Tests\TestCase;
 /**
  * @internal
  */
-final class LoginTest extends TestCase
+final class LoginWithoutTwoFactorAuthTest extends TestCase
 {
     use DatabaseTransactions;
 

@@ -51,6 +51,7 @@ final class RequestTest extends TestCase
     public function testCorrectEmail(): void
     {
         $user = User::factory()->create(['status' => User::STATUS_ACTIVE, 'verify_token' => null, 'expires' => null]);
+
         $response = $this->post('password/email', [
             'email' => $user->email,
         ]);
@@ -65,7 +66,7 @@ final class RequestTest extends TestCase
     {
         $user = User::factory()->create(['status' => User::STATUS_ACTIVE, 'verify_token' => null, 'expires' => null]);
 
-        $response = $this->post('password/email', [
+        $this->post('password/email', [
             'email' => $user->email,
         ]);
 

@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Tests\Unit\Models\User\PhoneVerify;
 
 use App\Models\User\User;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-use App\Services\Auth\Tokenizer;
-use Tests\TestCase;
+use App\Services\Auth\Tokenizer\Interface\Tokenizer;
+use App\Services\Auth\Tokenizer\TokenizerSms;
 use Carbon\Carbon;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\App;
+use Tests\TestCase;
 
 // Test create User for himself(User)
 /**
@@ -21,14 +23,12 @@ final class RequestTest extends TestCase
     private $tokenizer;
     private $now;
 
-
     protected function setUp(): void
     {
         parent::setUp();
         $this->tokenizer = $this->tokenizer();
         $this->now = Carbon::now();
     }
-
 
     public function testDefault(): void
     {
@@ -53,7 +53,6 @@ final class RequestTest extends TestCase
         $user->requestPhoneVerification($this->tokenizer, $this->now);
     }
 
-
     public function testRequest(): void
     {
         /** @var User $user */
@@ -67,8 +66,6 @@ final class RequestTest extends TestCase
         self::assertNotEmpty($user->phone_verify_token);
     }
 
-
-//
     public function testRequestWithOldPhone(): void
     {
         /** @var User $user */
@@ -98,7 +95,6 @@ final class RequestTest extends TestCase
         self::assertFalse($user->isPhoneVerified());
     }
 
-
     public function testRequestAlreadySent(): void
     {
         /** @var User $user */
@@ -117,7 +113,6 @@ final class RequestTest extends TestCase
 
     private function tokenizer(): Tokenizer
     {
-        return new Tokenizer();
+        return App::make(TokenizerSms::class);
     }
-
 }

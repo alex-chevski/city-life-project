@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Sms;
 
-use Illuminate\Contracts\Mail\Mailer as MailerInterface;
-use App\Models\User\User;
 use App\Mail\VerifyPhoneMail;
+use App\Models\User\User;
+use Illuminate\Contracts\Mail\Mailer as MailerInterface;
 
 // for default
 class EmailSms implements SmsSender
@@ -17,7 +19,6 @@ class EmailSms implements SmsSender
         $this->mailer = $mailer;
         $this->user = $user;
     }
-
 
     public function send($number, $text): void
     {

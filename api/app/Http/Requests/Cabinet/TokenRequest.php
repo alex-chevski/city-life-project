@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\Cabinet;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PhoneVerifyRequest extends FormRequest
+class TokenRequest extends FormRequest
 {
     public function authorize(): bool
     {

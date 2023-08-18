@@ -19,6 +19,11 @@ Breadcrumbs::register('login', function (Crumbs $crumbs): void {
     $crumbs->push('Логин', route('login'));
 });
 
+Breadcrumbs::register('login.phone', function (Crumbs $crumbs): void {
+    $crumbs->parent('home');
+    $crumbs->push('Логин', route('login.phone'));
+});
+
 Breadcrumbs::register('register', function (Crumbs $crumbs): void {
     $crumbs->parent('home');
     $crumbs->push('Регистрация', route('register'));
@@ -50,9 +55,16 @@ Breadcrumbs::register('cabinet.profile.edit', function (Crumbs $crumbs): void {
     $crumbs->push('Редактировать профиль', route('cabinet.profile.edit'));
 });
 
-Breadcrumbs::register('cabinet.profile.phone', function (Crumbs $crumbs) {
+Breadcrumbs::register('cabinet.profile.phone', function (Crumbs $crumbs): void {
     $crumbs->parent('cabinet.profile.home');
     $crumbs->push('Phone', route('cabinet.profile.phone'));
+});
+
+// Cabinet Adverts
+
+Breadcrumbs::register('cabinet.adverts.index', function (Crumbs $crumbs): void {
+    $crumbs->parent('cabinet.home');
+    $crumbs->push('Мои объявления', route('cabinet.adverts.index'));
 });
 
 // Admin

@@ -6,7 +6,7 @@ namespace App\UseCases\Auth\ResetPassword;
 
 use App\Mail\ResetPasswordMail;
 use App\Models\User\User;
-use App\Services\Auth\Tokenizer;
+use App\Services\Auth\Tokenizer\TokenizerMail;
 use Carbon\Carbon;
 use Illuminate\Contracts\Mail\Mailer as MailerInterface;
 
@@ -18,7 +18,7 @@ class RequestService
 {
     private $mailer;
     private User $user;
-    private Tokenizer $tokenizer;
+    private TokenizerMail $tokenizer;
     private Carbon $date;
 
     /**
@@ -27,7 +27,7 @@ class RequestService
     public function __construct(
         MailerInterface $mailer,
         User $user,
-        Tokenizer $tokenizer,
+        TokenizerMail $tokenizer,
         Carbon $date,
     ) {
         $this->mailer = $mailer;

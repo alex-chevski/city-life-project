@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Tests\Unit\Models\User\PhoneVerify;
 
 use App\Models\User\User;
-use App\Services\Auth\Tokenizer;
+use App\Services\Auth\Tokenizer\Interface\Tokenizer;
+use App\Services\Auth\Tokenizer\TokenizerSms;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\App;
 use Tests\TestCase;
 
 /**
@@ -19,7 +21,6 @@ final class ResponseTest extends TestCase
 
     private $now;
     private $tokenizer;
-
 
     protected function setUp(): void
     {
@@ -38,10 +39,9 @@ final class ResponseTest extends TestCase
             'phone_verify_token_expire' => $this->now,
         ]);
         self::assertFalse($user->isPhoneVerified());
-        $user->verifyPhone($token, $this->now->copy()->subSeconds(13), $this->tokenizer->generate($user->phone_verify_token_expire, 'default', $user->phone_verify_token));
+        $user->verifyPhone($token, $this->now->copy()->subSeconds(13), $this->tokenizer->default($user->phone_verify_token));
         self::assertTrue($user->isPhoneVerified());
     }
-
 
     public function testVerifyIncorrectToken(): void
     {
@@ -53,9 +53,8 @@ final class ResponseTest extends TestCase
             'phone_verify_token_expire' => $this->now,
         ]);
         $this->expectExceptionMessage('Token is invalid.');
-        $user->verifyPhone('other_token', $this->now->copy()->subSeconds(13), $this->tokenizer->generate($user->phone_verify_token_expire, 'default', $user->phone_verify_token));
+        $user->verifyPhone('other_token', $this->now->copy()->subSeconds(13), $this->tokenizer->default($user->phone_verify_token));
     }
-
 
     public function testVerifyExpiredToken(): void
     {
@@ -67,11 +66,11 @@ final class ResponseTest extends TestCase
             'phone_verify_token_expire' => $this->now,
         ]);
         $this->expectExceptionMessage('Token is expired.');
-        $user->verifyPhone($token, $this->now->copy()->addSeconds(500),  $this->tokenizer->generate($user->phone_verify_token_expire, 'default', $user->phone_verify_token));
+        $user->verifyPhone($token, $this->now->copy()->addSeconds(500), $this->tokenizer->default($user->phone_verify_token));
     }
 
     private function tokenizer(): Tokenizer
     {
-        return new Tokenizer();
+        return App::make(TokenizerSms::class);
     }
 }

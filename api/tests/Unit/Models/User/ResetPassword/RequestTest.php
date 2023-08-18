@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Tests\Unit\Models\User\ResetPassword;
 
 use App\Models\User\User;
-use App\Services\Auth\Tokenizer;
+use App\Services\Auth\Tokenizer\Interface\Tokenizer;
+use App\Services\Auth\Tokenizer\TokenizerMail;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\App;
 use Tests\TestCase;
 
 /**
@@ -30,11 +32,11 @@ final class RequestTest extends TestCase
     {
         $user = User::factory()->create(['status' => User::STATUS_ACTIVE, 'verify_token' => null, 'expires' => null]);
 
-        $user->requestPasswordReset($this->tokenizer, $this->now);
+        $user->requestPasswordReset($this->tokenizer, $this->now->copy());
 
         self::assertNotNull($token = $user->getPasswordResetToken());
 
-        self::assertEquals($token, $this->tokenizer->generate($token->getExpires(), 'default', $token->getValue()));
+        self::assertEquals($token->getValue(), $this->tokenizer->default($token->getValue())->getValue());
     }
 
     public function testNotActive(): void
@@ -47,11 +49,11 @@ final class RequestTest extends TestCase
 
     public function testExpired(): void
     {
-        $user = User::factory()->create(['status' => User::STATUS_ACTIVE]);
+        $user = User::factory()->create(['status' => User::STATUS_ACTIVE, 'verify_token' => null, 'expires' => null]);
 
-        $user->requestPasswordReset($this->tokenizer, $this->now->modify('+ 1 hour'));
+        $user->requestPasswordReset($this->tokenizer, $this->now->copy()->modify('+1 hour'));
 
-        $newDate = $this->now->modify('2 hours');
+        $newDate = $this->now->modify('+2 hours');
 
         $user->checkRepeatRequest($token = $user->getPasswordResetToken(), $token->getExpires(), $newDate);
 
@@ -70,6 +72,6 @@ final class RequestTest extends TestCase
 
     private function tokenizer(): Tokenizer
     {
-        return new Tokenizer();
+        return App::make(TokenizerMail::class);
     }
 }

@@ -33,6 +33,22 @@
                 @endif
             </td>
         </tr>
+        @if ($user->phone)
+            <tr>
+                <th>Двухфакторная аунтификация</th>
+                    <td>
+                        <form method="POST" action="{{ route('cabinet.profile.phone.auth') }}">
+                            @csrf
+                            @if($user->isPhoneAuthEnabled())
+                                <button type="submit" class="btn btn-sm btn-danger">Выключить</button>
+                            @else
+                                <button type="submit" class="btn btn-sm btn-success">Включить</button>
+                            @endif
+                        </form>
+
+                    </td>
+            </tr>
+        @endif
         </tbody>
     </table>
 @endsection

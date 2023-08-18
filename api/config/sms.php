@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     'driver' => env('SMS_DRIVER', 'email'),
 
     'drivers' => [
-        //real service to send own data
+        // real service to send own data
         'sms.ru' => [
             'app_id' => env('SMS_SMS_RU_APP_ID'),
             'url' => env('SMS_SMS_RU_URL'),

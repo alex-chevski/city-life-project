@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Carbon\Carbon;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\ServiceProvider;
 
 final class CarbonServiceProvider extends ServiceProvider
 {
@@ -22,10 +22,6 @@ final class CarbonServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->app->bind(Carbon::class, function(Application $app){
-            return new Carbon('now', 'Europe/Moscow');
-        });
-
+        $this->app->bind(Carbon::class, static fn (Application $app) => new Carbon('now', 'Europe/Moscow'));
     }
-
 }

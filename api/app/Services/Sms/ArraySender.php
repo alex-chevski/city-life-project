@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Services\Sms;
+declare(strict_types=1);
 
-use GuzzleHttp\Client;
+namespace App\Services\Sms;
 
 // for tests look at phpunit.xml
 class ArraySender implements SmsSender
@@ -18,8 +18,7 @@ class ArraySender implements SmsSender
     }
 
     /**
-     * undocumented function
-     *
+     * undocumented function.
      */
     public function getMessages(): array
     {

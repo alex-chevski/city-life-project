@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Sms;
 
 use GuzzleHttp\Client;
+use InvalidArgumentException;
 
 // service https://sms.ru/
 class SmsRu implements SmsSender
@@ -14,7 +17,7 @@ class SmsRu implements SmsSender
     public function __construct($appId, $url = 'https://sms.ru/sms/send')
     {
         if (empty($appId)) {
-            throw new \InvalidArgumentException('Sms appId must be set.');
+            throw new InvalidArgumentException('Sms appId must be set.');
         }
 
         $this->appId = $appId;
@@ -28,7 +31,7 @@ class SmsRu implements SmsSender
             'form_params' => [
                 'api_id' => $this->appId,
                 'to' => '+' . trim($number, '+'),
-                'msg' => $text
+                'msg' => $text,
             ],
         ]);
     }

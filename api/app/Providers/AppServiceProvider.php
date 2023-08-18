@@ -25,5 +25,4 @@ final class AppServiceProvider extends ServiceProvider
             __DIR__ . '/../../vendor/laravel/framework/src/Illuminate/Mail/resources/views/text/layout.blade.php' => resource_path('views/text/layout.blade.php'),
         ], 'mail_view_override');
     }
-
 }

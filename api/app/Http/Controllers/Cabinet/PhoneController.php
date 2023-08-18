@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Cabinet;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Cabinet\PhoneVerifyRequest;
+use App\Http\Requests\Cabinet\TokenRequest;
 use App\UseCases\Profile\PhoneService;
+use DomainException;
 use Illuminate\Support\Facades\Auth;
 
 class PhoneController extends Controller
@@ -20,7 +23,7 @@ class PhoneController extends Controller
     {
         try {
             $this->service->request(Auth::id());
-        } catch (\DomainException $e) {
+        } catch (DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
 
@@ -36,11 +39,11 @@ class PhoneController extends Controller
         return view('cabinet.profile.phone', compact('user'));
     }
 
-    public function verify(PhoneVerifyRequest $request)
+    public function verify(TokenRequest $request)
     {
         try {
             $this->service->verify(Auth::id(), $request['token']);
-        } catch (\DomainException $e) {
+        } catch (DomainException $e) {
             return redirect()->route('cabinet.profile.phone')->with('error', $e->getMessage());
         }
 
@@ -49,7 +52,11 @@ class PhoneController extends Controller
 
     public function auth()
     {
-        $this->service->toggleAuth(Auth::id());
+        try {
+            $this->service->toggleAuth(Auth::id());
+        } catch (DomainException $e) {
+            return redirect()->route('cabinet.profile.home')->with('error', $e->getMessage());
+        }
 
         return redirect()->route('cabinet.profile.home');
     }

@@ -18,8 +18,10 @@ final class VerifyPhoneMail extends Mailable
 
     /**
      * Create a new message instance.
+     * @param mixed $number
+     * @param mixed $text
      */
-    public function __construct ($number, $text)
+    public function __construct($number, $text)
     {
         $this->number = $number;
         $this->text  = $text;
