@@ -50,6 +50,12 @@ api-test:
 api-migrate-database:
 	docker compose run --rm api-php-cli php artisan migrate
 
+api-migrate-database-refresh:
+	docker compose run --rm api-php-cli php artisan migrate:refresh
+
+api-migrate-database-refresh-seed:
+	docker compose run --rm api-php-cli php artisan migrate:refresh --seed
+
 api-test-unit:
 	docker compose run --rm api-php-cli composer test -- --testsuite=unit
 
