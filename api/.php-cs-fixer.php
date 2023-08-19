@@ -17,7 +17,7 @@ return
                     __DIR__ . '/bootstrap',
                     __DIR__ . '/database',
                     __DIR__ . '/routes',
-                    __DIR__ . '/storage',
+                    // __DIR__ . '/storage',
                     __DIR__ . '/tests',
                 ])
                 ->append([
