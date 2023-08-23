@@ -32,6 +32,8 @@ services:
       DB_USER: app
       DB_PASSWORD: secret
       DB_NAME: app
+      REDIS_PORT: 6379
+      REDIS_HOST: redis
     volumes:
       - ./api:/app
     depends_on:
@@ -49,6 +51,8 @@ services:
       DB_USER: app
       DB_PASSWORD: secret
       DB_NAME: app
+      REDIS_PORT: 6379
+      REDIS_HOST: redis
       # PHP_IDE_CONFIG: serverName=API
     volumes:
       - ./api:/app
