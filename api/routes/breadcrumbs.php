@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Http\Router\AdvertsPath;
+use App\Models\Adverts\Advert\Advert;
 use App\Models\Adverts\Attribute;
 use App\Models\Adverts\Category;
 use App\Models\Region;
@@ -39,6 +41,41 @@ Breadcrumbs::register('password.reset', function (Crumbs $crumbs): void {
     $crumbs->push('', route('password.reset', Str::uuid()));
 });
 
+// Adverts
+
+Breadcrumbs::register('adverts.inner_region', function (Crumbs $crumbs, AdvertsPath $path): void {
+    if ($path->region && $parent = $path->region->parent) {
+        $crumbs->parent('adverts.inner_region', $path->withRegion($parent));
+    } else {
+        $crumbs->parent('home');
+        $crumbs->push('Adverts', route('adverts.index'));
+    }
+    if ($path->region) {
+        $crumbs->push($path->region->name, route('adverts.index', $path));
+    }
+});
+
+Breadcrumbs::register('adverts.inner_category', function (Crumbs $crumbs, AdvertsPath $path, AdvertsPath $orig): void {
+    if ($path->category && $parent = $path->category->parent) {
+        $crumbs->parent('adverts.inner_category', $path->withCategory($parent), $orig);
+    } else {
+        $crumbs->parent('adverts.inner_region', $orig);
+    }
+    if ($path->category) {
+        $crumbs->push($path->category->name, route('adverts.index', $path));
+    }
+});
+
+Breadcrumbs::register('adverts.index', function (Crumbs $crumbs, AdvertsPath $path = null): void {
+    $path = $path ?: adverts_path(null, null);
+    $crumbs->parent('adverts.inner_category', $path, $path);
+});
+
+Breadcrumbs::register('adverts.show', function (Crumbs $crumbs, Advert $advert): void {
+    $crumbs->parent('adverts.index', adverts_path($advert->region, $advert->category));
+    $crumbs->push($advert->title, route('adverts.show', $advert));
+});
+
 // Cabinet
 Breadcrumbs::register('cabinet.home', function (Crumbs $crumbs): void {
     $crumbs->parent('home');
@@ -65,6 +102,21 @@ Breadcrumbs::register('cabinet.profile.phone', function (Crumbs $crumbs): void {
 Breadcrumbs::register('cabinet.adverts.index', function (Crumbs $crumbs): void {
     $crumbs->parent('cabinet.home');
     $crumbs->push('Мои объявления', route('cabinet.adverts.index'));
+});
+
+Breadcrumbs::register('cabinet.adverts.create', function (Crumbs $crumbs): void {
+    $crumbs->parent('adverts.index');
+    $crumbs->push('Create', route('cabinet.adverts.create'));
+});
+
+Breadcrumbs::register('cabinet.adverts.create.region', function (Crumbs $crumbs, Category $category, Region $region = null): void {
+    $crumbs->parent('cabinet.adverts.create');
+    $crumbs->push($category->name, route('cabinet.adverts.create.region', [$category, $region]));
+});
+
+Breadcrumbs::register('cabinet.adverts.create.advert', function (Crumbs $crumbs, Category $category, Region $region = null): void {
+    $crumbs->parent('cabinet.adverts.create.region', $category, $region);
+    $crumbs->push($region ? $region->name : 'All', route('cabinet.adverts.create.advert', [$category, $region]));
 });
 
 // Admin
@@ -160,4 +212,20 @@ Breadcrumbs::register('admin.adverts.categories.attributes.show', function (Crum
 Breadcrumbs::register('admin.adverts.categories.attributes.edit', function (Crumbs $crumbs, Category $category, Attribute $attribute): void {
     $crumbs->parent('admin.adverts.categories.attributes.show', $category, $attribute);
     $crumbs->push('Edit', route('admin.adverts.categories.attributes.edit', [$category, $attribute]));
+});
+
+// Adverts Admin
+Breadcrumbs::register('admin.adverts.adverts.index', function (Crumbs $crumbs): void {
+    $crumbs->parent('admin.home');
+    $crumbs->push('Categories', route('admin.adverts.adverts.index'));
+});
+
+Breadcrumbs::register('admin.adverts.adverts.edit', function (Crumbs $crumbs, Advert $advert): void {
+    $crumbs->parent('admin.home');
+    $crumbs->push($advert->title, route('admin.adverts.adverts.edit', $advert));
+});
+
+Breadcrumbs::register('admin.adverts.adverts.reject', function (Crumbs $crumbs, Advert $advert): void {
+    $crumbs->parent('admin.home');
+    $crumbs->push($advert->title, route('admin.adverts.adverts.reject', $advert));
 });
