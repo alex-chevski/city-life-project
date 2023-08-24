@@ -1,17 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
-    @include('cabinet.adverts._nav')
+    @include('cabinet.favorites._nav')
 
     <table class="table table-striped">
         <thead>
         <tr>
             <th>ID</th>
-            <th>Дата обновления</th>
+            <th>Дата Обновления</th>
             <th>Название</th>
             <th>Регион</th>
             <th>Категория</th>
-            <th>Статус</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -28,15 +28,11 @@
                 </td>
                 <td>{{ $advert->category->name }}</td>
                 <td>
-                    @if ($advert->isDraft())
-                        <span class="badge bg-secondary">Черновик</span>
-                    @elseif ($advert->isOnModeration())
-                        <span class="badge bg-primary">На Модерации</span>
-                    @elseif ($advert->isActive())
-                        <span class="badge bg-primary">Активно</span>
-                    @elseif ($advert->isClosed())
-                        <span class="badge bg-secondary">Закрыто</span>
-                    @endif
+                    <form method="POST" action="{{ route('cabinet.favorites.remove', $advert) }}" class="mr-1">
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn btn-sm btn-danger"><span class="fa fa-remove"></span> Удалить</button>
+                    </form>
                 </td>
             </tr>
         @endforeach

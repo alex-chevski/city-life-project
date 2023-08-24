@@ -168,6 +168,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\SmsServiceProvider::class,
         App\Providers\CarbonServiceProvider::class,
+        App\Providers\CacheServiceProvider::class,
     ])->toArray(),
 
     /*

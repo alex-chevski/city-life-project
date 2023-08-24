@@ -48,7 +48,7 @@ Breadcrumbs::register('adverts.inner_region', function (Crumbs $crumbs, AdvertsP
         $crumbs->parent('adverts.inner_region', $path->withRegion($parent));
     } else {
         $crumbs->parent('home');
-        $crumbs->push('Adverts', route('adverts.index'));
+        $crumbs->push('Объявления', route('adverts.index'));
     }
     if ($path->region) {
         $crumbs->push($path->region->name, route('adverts.index', $path));
@@ -94,7 +94,7 @@ Breadcrumbs::register('cabinet.profile.edit', function (Crumbs $crumbs): void {
 
 Breadcrumbs::register('cabinet.profile.phone', function (Crumbs $crumbs): void {
     $crumbs->parent('cabinet.profile.home');
-    $crumbs->push('Phone', route('cabinet.profile.phone'));
+    $crumbs->push('Телефон', route('cabinet.profile.phone'));
 });
 
 // Cabinet Adverts
@@ -106,7 +106,7 @@ Breadcrumbs::register('cabinet.adverts.index', function (Crumbs $crumbs): void {
 
 Breadcrumbs::register('cabinet.adverts.create', function (Crumbs $crumbs): void {
     $crumbs->parent('adverts.index');
-    $crumbs->push('Create', route('cabinet.adverts.create'));
+    $crumbs->push('Создать', route('cabinet.adverts.create'));
 });
 
 Breadcrumbs::register('cabinet.adverts.create.region', function (Crumbs $crumbs, Category $category, Region $region = null): void {
@@ -119,10 +119,16 @@ Breadcrumbs::register('cabinet.adverts.create.advert', function (Crumbs $crumbs,
     $crumbs->push($region ? $region->name : 'All', route('cabinet.adverts.create.advert', [$category, $region]));
 });
 
+// favorites
+Breadcrumbs::register('cabinet.favorites.index', function (Crumbs $crumbs) {
+    $crumbs->parent('cabinet.home');
+    $crumbs->push('Объявления', route('cabinet.favorites.index'));
+});
+
 // Admin
 Breadcrumbs::register('admin.home', function (Crumbs $crumbs): void {
     $crumbs->parent('home');
-    $crumbs->push('Админ', route('admin.home'));
+    $crumbs->push('Админ-Панель', route('admin.home'));
 });
 
 // Users
@@ -201,7 +207,7 @@ Breadcrumbs::register('admin.adverts.categories.edit', function (Crumbs $crumbs,
 
 Breadcrumbs::register('admin.adverts.categories.attributes.create', function (Crumbs $crumbs, Category $category): void {
     $crumbs->parent('admin.adverts.categories.show', $category);
-    $crumbs->push('Create', route('admin.adverts.categories.attributes.create', $category));
+    $crumbs->push('Создать', route('admin.adverts.categories.attributes.create', $category));
 });
 
 Breadcrumbs::register('admin.adverts.categories.attributes.show', function (Crumbs $crumbs, Category $category, Attribute $attribute): void {
@@ -211,13 +217,13 @@ Breadcrumbs::register('admin.adverts.categories.attributes.show', function (Crum
 
 Breadcrumbs::register('admin.adverts.categories.attributes.edit', function (Crumbs $crumbs, Category $category, Attribute $attribute): void {
     $crumbs->parent('admin.adverts.categories.attributes.show', $category, $attribute);
-    $crumbs->push('Edit', route('admin.adverts.categories.attributes.edit', [$category, $attribute]));
+    $crumbs->push('Редактирование', route('admin.adverts.categories.attributes.edit', [$category, $attribute]));
 });
 
 // Adverts Admin
 Breadcrumbs::register('admin.adverts.adverts.index', function (Crumbs $crumbs): void {
     $crumbs->parent('admin.home');
-    $crumbs->push('Categories', route('admin.adverts.adverts.index'));
+    $crumbs->push('Категории', route('admin.adverts.adverts.index'));
 });
 
 Breadcrumbs::register('admin.adverts.adverts.edit', function (Crumbs $crumbs, Advert $advert): void {

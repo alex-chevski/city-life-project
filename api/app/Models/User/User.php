@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use DomainException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Models\Adverts\Advert\Advert;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 use InvalidArgumentException;
@@ -308,6 +309,28 @@ class User extends Authenticatable
             throw new DomainException('Incorrect verify token. ');
         }
         return $user;
+    }
+
+    public function favorites()
+    {
+        return $this->belongsToMany(Advert::class, 'advert_favorites', 'user_id', 'advert_id');
+    }
+
+    public function addToFavorites($id): void
+    {
+        if ($this->hasInFavorites($id)){
+            throw new \DomainException('This advert is already added to favorites.');
+        }
+
+        $this->favorites()->attach($id);
+    }
+
+    public function removeFromFavorites($id): void {
+        $this->favorites()->detach($id);
+    }
+
+    public function hasInFavorites($id): bool{
+        return $this->favorites()->where('id', $id)->exists();
     }
 
     private function verifyGetToken(string $type, Tokenizer $tokenizer, Carbon $now): Token

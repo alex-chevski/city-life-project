@@ -7,6 +7,7 @@ namespace App\Http\Router;
 use App\Models\Adverts\Category;
 use App\Models\Region;
 use Illuminate\Contracts\Routing\UrlRoutable;
+use Illuminate\Support\Facades\Cache;
 
 class AdvertsPath implements UrlRoutable
 {
@@ -36,15 +37,13 @@ class AdvertsPath implements UrlRoutable
     public function getRouteKey()
     {
         $segments = [];
-
         if ($this->region) {
-            $segments[] = $this->region->getPath();
+            $segments[] = Cache::tags(Region::class)->rememberForever('region_path_' . $this->region->id, fn () => $this->region->getPath());
         }
 
         if ($this->category) {
-            $segments[] = $this->category->getPath();
+            $segments[] = Cache::tags(Category::class)->rememberForever('category_path_' . $this->category->id, fn () => $this->category->getPath());
         }
-
         return implode('/', $segments);
     }
 
