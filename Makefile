@@ -74,6 +74,11 @@ api-analyze:
 api-cs-fix:
 	docker compose run --rm api-php-cli composer php-cs-fixer fix
 
+api-clear-cache-laravel:
+	docker compose run --rm api-php-cli php artisan cache:clear
+	docker compose run --rm api-php-cli php artisan config:clear
+
+
 api-fake-ten-users-to-base:
 	docker compose run --rm api-php-cli php artisan db:seed
 
