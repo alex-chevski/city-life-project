@@ -18,7 +18,7 @@
             <th>ID</th><td>{{ $region->id }}</td>
         </tr>
         <tr>
-            <th>Name</th><td>{{ $region->name }}</td>
+            <th>Имя</th><td>{{ $region->name }}</td>
         </tr>
         <tr>
             <th>Slug</th><td>{{ $region->slug }}</td>

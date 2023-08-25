@@ -6,7 +6,7 @@
         @csrf
 
         <div class="form-group">
-            <label for="reason" class="col-form-label">Причина</label>
+            <label for="reason" class="col-form-label">Причина отказа</label>
             <textarea id="reason" class="form-control{{ $errors->has('reason') ? ' is-invalid' : '' }}" name="reason" rows="10" required>{{ old('reason', $advert->reject_reason) }}</textarea>
             @if ($errors->has('reason'))
                 <span class="invalid-feedback"><strong>{{ $errors->first('reason') }}</strong></span>
@@ -14,7 +14,7 @@
         </div>
 
         <div class="form-group">
-            <button type="submit" class="btn btn-primary mt-3">Отправить</button>
+            <button type="submit" class="btn btn-primary mt-3">Отправить пользователю</button>
         </div>
     </form>
 

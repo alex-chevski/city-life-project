@@ -2,7 +2,7 @@
     <thead>
     <tr>
         <th>Имя</th>
-        <th>Отображение адреса (url)</th>
+        <th>Slug</th>
     </tr>
     </thead>
     <tbody>

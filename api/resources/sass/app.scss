@@ -6,6 +6,8 @@
 // Bootstrap
 @import "bootstrap/scss/bootstrap";
 
+@import "font-awesome/scss/font-awesome.scss";
+
 .navbar {
     background-color: #0c64a2;
     padding: 0.35rem 1rem;
@@ -36,4 +38,13 @@ body {
     &:first-of-type {
         margin-top: 0;
     }
+}
+
+.search-bar {
+    background: #e9ecef;
+}
+
+.breadcrumb {
+    background: none;
+    padding: 0;
 }

@@ -4,7 +4,7 @@
 
     @if ($advert->isDraft())
         <div class="alert alert-danger">
-            Это черновик
+            It is a draft
         </div>
         @if ($advert->reject_reason)
             <div class="alert alert-danger">
@@ -107,7 +107,7 @@
             </table>
 
 
-            <p>Address: {{ $advert->address }}</p>
+            <p>Адрес: {{ $advert->address }}</p>
 
             <div style="margin: 20px 0; border: 1px solid #ddd">
 

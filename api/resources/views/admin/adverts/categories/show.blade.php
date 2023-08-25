@@ -18,7 +18,7 @@
             <th>ID</th><td>{{ $category->id }}</td>
         </tr>
         <tr>
-            <th>Name</th><td>{{ $category->name }}</td>
+            <th>Название</th><td>{{ $category->name }}</td>
         </tr>
         <tr>
             <th>Slug</th><td>{{ $category->slug }}</td>
@@ -33,7 +33,7 @@
         <thead>
         <tr>
             <th>Sort</th>
-            <th>Name</th>
+            <th>Название</th>
             <th>Slug</th>
             <th>Required</th>
         </tr>
