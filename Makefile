@@ -1,5 +1,5 @@
-init: docker-down-clear api-clear docker-pull docker-build docker-up api-init
-up: docker-up
+init: docker-down-clear api-clear docker-pull docker-memory docker-build docker-up api-init
+up: docker-memory docker-up
 down: docker-down
 clear: docker-down-clear
 restart: clear up
@@ -27,15 +27,26 @@ docker-pull:
 docker-build:
 	docker compose build
 
+docker-memory:
+	sudo sysctl -w vm.max_map_count=262144
+
 api-clear:
 	docker run --rm -v ${PWD}/api:/app -w /app alpine sh -c 'rm -rf storage/debugbar/*'
 	docker run --rm -v ${PWD}/api:/app -w /app alpine sh -c 'rm -rf public/build'
 
-api-init: api-node-init api-composer-install api-permissions api-migrate-database
+api-init: api-node-init api-composer-install api-permissions api-copy-to-env api-generate-key api-migrate-database
+# api-init: api-node-init api-composer-install api-permissions api-migrate-database
 
 api-permissions:
 	docker run --rm -v ${PWD}/api:/app -w /app alpine chmod -R 755 .
 	docker run --rm -v ${PWD}/api:/app -w /app alpine chmod -R 777 storage
+
+api-copy-to-env:
+	cat api/.env.example > api/.env
+
+api-generate-app-key:
+	docker compose run --rm api-php-cli php artisan key:generate
+
 
 api-composer-install:
 	docker compose run --rm api-php-cli composer install
@@ -77,7 +88,6 @@ api-cs-fix:
 api-clear-cache-laravel:
 	docker compose run --rm api-php-cli php artisan cache:clear
 	docker compose run --rm api-php-cli php artisan config:clear
-
 
 api-fake-ten-users-to-base:
 	docker compose run --rm api-php-cli php artisan db:seed

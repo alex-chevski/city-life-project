@@ -5,7 +5,7 @@ services:
       context: ./frontend/docker
       dockerfile: development/nginx/Dockerfile
     ports:
-      - "8080:80"
+      - "8080:443"
     volumes:
       - ./frontend:/app
 
@@ -13,10 +13,13 @@ services:
     build:
       context: ./api/docker
       dockerfile: development/nginx/Dockerfile
+    # links:
+      # - api-php-fpm
     ports:
-      - "8081:80"
+      - "8081:443"
     volumes:
       - ./api:/app
+      - ./api/docker/common/nginx/conf.d/ssl:/etc/nginx/ssl
     depends_on:
       - api-php-fpm
 
@@ -24,6 +27,10 @@ services:
     build:
       context: ./api/docker
       dockerfile: development/php-fpm/Dockerfile
+    # links:
+      # - api-postgres
+      # - redis
+      # - elasticsearch
     environment:
       APP_ENV: dev
       APP_DEBUG: 1
@@ -34,16 +41,22 @@ services:
       DB_NAME: app
       REDIS_PORT: 6379
       REDIS_HOST: redis
+      ELASTICSEARCH_HOSTS: elasticsearch:9200
     volumes:
       - ./api:/app
     depends_on:
       - api-postgres
       - redis
+      - elasticsearch
 
   api-php-cli:
     build:
       context: ./api/docker
       dockerfile: development/php-cli/Dockerfile
+    # links:
+      # - api-postgres
+      # - redis
+      # - elasticsearch
     environment:
       # APP_ENV: dev
       APP_DEBUG: 1
@@ -53,9 +66,15 @@ services:
       DB_NAME: app
       REDIS_PORT: 6379
       REDIS_HOST: redis
+      ELASTICSEARCH_HOSTS: elasticsearch:9200
       # PHP_IDE_CONFIG: serverName=API
     volumes:
       - ./api:/app
+
+    # depends_on:
+      # - api-postgres
+      # - redis
+      # - elasticsearch
 
   api-node:
     build:
@@ -87,13 +106,31 @@ services:
       ports:
         - "8082:8025"
 
-
   redis:
       image: redis:alpine3.18
       ports:
         - "63791:6379"
 
-
+  elasticsearch:
+      image: elasticsearch:8.9.1
+      environment:
+          - bootstrap.memory_lock=true
+          - ES_JAVA_OPTS=-Xms128m -Xmx128m
+          - xpack.security.enabled=false
+          - discovery.type=single-node
+          # - discovery.zen.ping.multicast.enabled=false
+          # - action.auto_create_index=true
+      ulimits:
+          memlock:
+              soft: -1
+              hard: -1
+      volumes:
+          - elasticsearch:/var/lib/elasticsearch/data
+      ports:
+          - "9201:9200"
 
 volumes:
   api-postgres:
+  elasticsearch:
+  redis:
+  mailer:
