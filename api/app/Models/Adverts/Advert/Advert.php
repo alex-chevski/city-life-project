@@ -165,7 +165,6 @@ class Advert extends Model
     public function favorites()
     {
         return $this->belongsToMany(User::class, 'advert_favorites', 'advert_id', 'user_id');
-
     }
 
     public function scopeActive(Builder $query)
@@ -198,9 +197,8 @@ class Advert extends Model
 
     public function scopeFavoredByUser(Builder $query, User $user)
     {
-        return $query->whereHas('favorites', function(Builder $query) use ($user){
+        return $query->whereHas('favorites', static function (Builder $query) use ($user): void {
             $query->where('user_id', $user->id);
         });
-
     }
 }

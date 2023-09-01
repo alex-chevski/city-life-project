@@ -24,7 +24,9 @@
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
@@ -51,18 +53,19 @@
                             @endif
                         @else
                             <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
+                                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }}
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                     @can('admin-panel')
-                                        <a class="dropdown-item" href="{{route('admin.home')}}">Админ панель</a>
+                                        <a class="dropdown-item" href="{{ route('admin.home') }}">Админ панель</a>
                                     @endcan
 
-                                    <a class="dropdown-item" href="{{route('cabinet.home')}}">Кабинет</a>
+                                    <a class="dropdown-item" href="{{ route('cabinet.home') }}">Кабинет</a>
                                     <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
+                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                         {{ __('Выйти') }}
                                     </a>
@@ -78,33 +81,10 @@
             </div>
         </nav>
         @section('search')
-            <div class="search-bar pt-3">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-9">
-                            <form action="{{ route('adverts.index') }}" method="GET">
-                                <div class="row">
-                                    <div class="col-md-11">
-                                        <div class="form-group">
-                                            <input type="text" class="form-control" name="text" value="{{ request('text') }}" placeholder="Город, адрес, метро, район, ж/д, шоссе или ЖК...">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-1">
-                                        <div class="form-group">
-                                            <button class="btn btn-light border" type="submit"><span class="fa fa-search"></span></button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="col-md-3" style="text-align: right">
-                            <p><a href="{{ route('cabinet.adverts.create') }}" class="btn btn-success"><span class="fa fa-plus"></span> Разместить объявление</a></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @include('layouts.partials.search', ['category' => null, 'action' => route('adverts.index')])
         @show
     </header>
+
     <main class="app-content py-3">
         <div class="container">
             @section('breadcrumbs', Breadcrumbs::render())
