@@ -159,7 +159,7 @@ return [
     'providers' => ServiceProvider::defaultProviders()->merge([
         // Package Service Providers...
         Barryvdh\Debugbar\ServiceProvider::class,
-
+        // Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         // Application Service Providers...
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
@@ -167,8 +167,10 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\SmsServiceProvider::class,
+        // App\Providers\PaymentServiceProvider::class,
         App\Providers\CarbonServiceProvider::class,
         App\Providers\CacheServiceProvider::class,
+        App\Providers\SearchServiceProvider::class,
     ])->toArray(),
 
     /*

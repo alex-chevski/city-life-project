@@ -4,11 +4,12 @@
          bootstrap="vendor/autoload.php"
          colors="true"
          cacheDirectory="storage/framework/cache/.phpunit.cache"
-        cacheResultFile="storage/framework/cache/.phpunit.result.cache"
+         cacheResultFile="storage/framework/cache/.phpunit.result.cache"
 		 requireCoverageMetadata="false"
 		 beStrictAboutCoverageMetadata="true"
          beStrictAboutOutputDuringTests="true"
 	     beStrictAboutTodoAnnotatedTests="true"
+         displayDetailsOnTestsThatTriggerWarnings="true"
          failOnRisky="true"
          failOnWarning="true">
 

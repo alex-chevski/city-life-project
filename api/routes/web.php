@@ -14,6 +14,9 @@ Route::post('/login/phone', 'App\Http\Controllers\Auth\LoginController@verify');
 
 Route::get('/verify/{token}', 'App\Http\Controllers\Auth\RegisterController@verify')->name('register.verify');
 
+Route::get('/banner/get', 'App\Http\Controllers\BannerController@get')->name('banner.get');
+Route::get('/banner/{banner}/click', 'App\Http\Controllers\BannerController@click')->name('banner.click');
+
 Route::group([
     'prefix' => 'adverts',
     'as' => 'adverts.',
@@ -73,6 +76,29 @@ Route::group(
             Route::post('/{advert}/close', 'ManageController@close')->name('close');
             Route::delete('/{advert}/destroy', 'ManageController@destroy')->name('destroy');
         });
+
+        Route::group([
+            'prefix' => 'banners',
+            'as' => 'banners.',
+            'namespace' => 'Banners',
+            'middleware' => [App\Http\Middleware\FilledProfile::class],
+        ], static function (): void {
+            Route::get('/', 'BannerController@index')->name('index');
+            Route::get('/create', 'CreateController@category')->name('create');
+            Route::get('/create/region/{category}/{region?}', 'CreateController@region')->name('create.region');
+            Route::get('/create/banner/{category}/{region?}', 'CreateController@banner')->name('create.banner');
+            Route::post('/create/banner/{category}/{region?}', 'CreateController@store')->name('create.banner.store');
+
+            Route::get('/show/{banner}', 'BannerController@show')->name('show');
+            Route::get('/{banner}/edit', 'BannerController@editForm')->name('edit');
+            Route::put('/{banner}/edit', 'BannerController@edit');
+            Route::get('/{banner}/file', 'BannerController@fileForm')->name('file');
+            Route::put('/{banner}/file', 'BannerController@file');
+            Route::post('/{banner}/send', 'BannerController@send')->name('send');
+            Route::post('/{banner}/cancel', 'BannerController@cancel')->name('cancel');
+            Route::post('/{banner}/order', 'BannerController@order')->name('order');
+            Route::delete('/{banner}/destroy', 'BannerController@destroy')->name('destroy');
+        });
     }
 );
 
@@ -113,6 +139,18 @@ Route::group(
                 Route::post('{advert}/reject', 'AdvertController@reject');
                 Route::delete('{advert}/destroy', 'AdvertController@destroy')->name('destroy');
             });
+        });
+
+        Route::group(['prefix' => 'banners', 'as' => 'banners.'], static function (): void {
+            Route::get('/', 'BannerController@index')->name('index');
+            Route::get('/{banner}/show', 'BannerController@show')->name('show');
+            Route::get('/{banner}/edit', 'BannerController@editForm')->name('edit');
+            Route::put('/{banner}/edit', 'BannerController@edit');
+            Route::post('/{banner}/moderate', 'BannerController@moderate')->name('moderate');
+            Route::get('/{banner}/reject', 'BannerController@rejectForm')->name('reject');
+            Route::post('/{banner}/reject', 'BannerController@reject');
+            Route::post('/{banner}/pay', 'BannerController@pay')->name('pay');
+            Route::delete('/{banner}/destroy', 'BannerController@destroy')->name('destroy');
         });
     }
 );

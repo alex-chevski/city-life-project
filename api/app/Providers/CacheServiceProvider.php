@@ -31,6 +31,7 @@ final class CacheServiceProvider extends ServiceProvider
 
     /**
      * undocumented function.
+     * @param mixed $class
      */
     private function registerFlusher($class): void
     {

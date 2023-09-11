@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Console\Commands\Search;
 
 use App\Models\Adverts\Advert\Advert;
+use App\Models\Banner\Banner;
 use App\Services\Search\AdvertIndexer;
+use App\Services\Search\BannerIndexer;
 use Illuminate\Console\Command;
 
 class ReindexCommand extends Command
@@ -13,11 +15,13 @@ class ReindexCommand extends Command
     protected $signature = 'search:reindex';
 
     private $adverts;
+    private $banners;
 
-    public function __construct(AdvertIndexer $adverts)
+    public function __construct(AdvertIndexer $adverts, BannerIndexer $banners)
     {
         parent::__construct();
         $this->adverts = $adverts;
+        $this->banners = $banners;
     }
 
     public function handle(): bool
@@ -26,6 +30,12 @@ class ReindexCommand extends Command
 
         foreach (Advert::active()->orderBy('id')->cursor() as $advert) {
             $this->adverts->index($advert);
+        }
+
+        $this->banners->clear();
+
+        foreach (Banner::active()->orderBy('id')->cursor() as $banner) {
+            $this->banners->index($banner);
         }
 
         return true;

@@ -85,7 +85,5 @@ class AdvertsPath implements UrlRoutable
             ->withCategory($category);
     }
 
-    public function resolveChildRouteBinding($childType, $value, $field): void
-    {
-    }
+    public function resolveChildRouteBinding($childType, $value, $field): void {}
 }

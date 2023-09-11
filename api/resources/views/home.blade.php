@@ -13,7 +13,10 @@
                     <div class="col-md-3">
                         <ul class="list-unstyled">
                             @foreach ($chunk as $current)
-                                <li><a href="{{ route('adverts.index', adverts_path(null, $current)) }}">{{ $current->name }}</a></li>
+                                <li>
+                                    <a
+                                        href="{{ route('adverts.index', adverts_path(null, $current)) }}">{{ $current->name }}</a>
+                                </li>
                             @endforeach
                         </ul>
                     </div>
@@ -32,7 +35,9 @@
                     <div class="col-md-3">
                         <ul class="list-unstyled">
                             @foreach ($chunk as $current)
-                                <li><a href="{{ route('adverts.index', adverts_path($current, null)) }}">{{ $current->name }}</a></li>
+                                <li><a
+                                        href="{{ route('adverts.index', adverts_path($current, null)) }}">{{ $current->name }}</a>
+                                </li>
                             @endforeach
                         </ul>
                     </div>

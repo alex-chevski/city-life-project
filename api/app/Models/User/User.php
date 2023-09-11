@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Models\User;
 
+use App\Models\Adverts\Advert\Advert;
 use App\Services\Auth\Tokenizer\Interface\Tokenizer;
 use Carbon\Carbon;
 use DomainException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use App\Models\Adverts\Advert\Advert;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 use InvalidArgumentException;
@@ -318,18 +318,20 @@ class User extends Authenticatable
 
     public function addToFavorites($id): void
     {
-        if ($this->hasInFavorites($id)){
-            throw new \DomainException('This advert is already added to favorites.');
+        if ($this->hasInFavorites($id)) {
+            throw new DomainException('This advert is already added to favorites.');
         }
 
         $this->favorites()->attach($id);
     }
 
-    public function removeFromFavorites($id): void {
+    public function removeFromFavorites($id): void
+    {
         $this->favorites()->detach($id);
     }
 
-    public function hasInFavorites($id): bool{
+    public function hasInFavorites($id): bool
+    {
         return $this->favorites()->where('id', $id)->exists();
     }
 
