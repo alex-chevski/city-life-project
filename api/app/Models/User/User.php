@@ -8,11 +8,13 @@ use App\Models\Adverts\Advert\Advert;
 use App\Services\Auth\Tokenizer\Interface\Tokenizer;
 use Carbon\Carbon;
 use DomainException;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 use InvalidArgumentException;
+use Laravel\Passport\HasApiTokens;
 
 /**
  * @property int $id
@@ -27,10 +29,11 @@ use InvalidArgumentException;
  * @property Carbon $phone_verify_token_expire
  * @property Carbon $expires
  * @property string $status
- * @protected string $role
+ * @property string $role
  */
 class User extends Authenticatable
 {
+    use HasApiTokens;
     use HasFactory;
     use Notifiable;
 
@@ -311,6 +314,23 @@ class User extends Authenticatable
         return $user;
     }
 
+    public static function registerByNetwork(string $network, string $identity): self
+    {
+        $user = static::create([
+            'name' => $identity,
+            'email' => null,
+            'password' => null,
+            'verify_token' => null,
+            'role' => self::ROLE_USER,
+            'status' => self::STATUS_ACTIVE,
+        ]);
+        $user->networks()->create([
+            'network' => $network,
+            'identity' => $identity,
+        ]);
+        return $user;
+    }
+
     public function favorites()
     {
         return $this->belongsToMany(Advert::class, 'advert_favorites', 'user_id', 'advert_id');
@@ -333,6 +353,23 @@ class User extends Authenticatable
     public function hasInFavorites($id): bool
     {
         return $this->favorites()->where('id', $id)->exists();
+    }
+
+    public function networks()
+    {
+        return $this->hasMany(Network::class, 'user_id', 'id');
+    }
+
+    public function scopeByNetwork(Builder $query, string $network, string $identity)
+    {
+        return $query->whereHas('networks', static function (Builder $query) use ($network, $identity): void {
+            $query->where('network', $network)->where('identity', $identity);
+        });
+    }
+
+    public function findForPassport($identifier)
+    {
+        return self::where('email', $identifier)->where('status', self::STATUS_ACTIVE)->first();
     }
 
     private function verifyGetToken(string $type, Tokenizer $tokenizer, Carbon $now): Token

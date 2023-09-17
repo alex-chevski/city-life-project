@@ -3,7 +3,7 @@
 
 @section('breadcrumbs')
     <ul class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{{ route('home')  }}">Главная страница</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('home') }}">Главная страница</a></li>
         <li class="breadcrumb-item active">Логин</li>
     </ul>
 @endsection
@@ -19,10 +19,13 @@
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
                         <div class="row mb-3">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Электронная почта') }}</label>
+                            <label for="email"
+                                class="col-md-4 col-form-label text-md-end">{{ __('Электронная почта') }}</label>
 
                             <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                                <input id="email" type="email"
+                                    class="form-control @error('email') is-invalid @enderror" name="email"
+                                    value="{{ old('email') }}" required autocomplete="email" autofocus>
 
                                 @error('email')
                                     <span class="invalid-feedback" role="alert">
@@ -37,7 +40,9 @@
                             <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Пароль') }}</label>
 
                             <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+                                <input id="password" type="password"
+                                    class="form-control @error('password') is-invalid @enderror" name="password" required
+                                    autocomplete="current-password">
 
                                 @error('password')
                                     <span class="invalid-feedback" role="alert">
@@ -50,7 +55,8 @@
                         <div class="row mb-3">
                             <div class="col-md-6 offset-md-4">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+                                    <input class="form-check-input" type="checkbox" name="remember" id="remember"
+                                        {{ old('remember') ? 'checked' : '' }}>
 
                                     <label class="form-check-label" for="remember">
                                         {{ __('Запомнить меня') }}
@@ -78,6 +84,20 @@
                             @enderror
                         </div>
                     </form>
+                </div>
+
+            </div>
+            <div class="col-md mt-3">
+                <div class="card">
+                    <div class="card-header">Войти через</div>
+                    <div class="card-body">
+                        <ul class="list-unstyled">
+                            <li>
+                                <a href="{{ route('login.network', ['network' => 'vkontakte']) }}"><span
+                                        class="fa fa-vk"></span> VKontakte</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>

@@ -14,6 +14,9 @@ Route::post('/login/phone', 'App\Http\Controllers\Auth\LoginController@verify');
 
 Route::get('/verify/{token}', 'App\Http\Controllers\Auth\RegisterController@verify')->name('register.verify');
 
+Route::get('/login/{network}', 'App\Http\Controllers\Auth\NetworkController@redirect')->name('login.network');
+Route::get('/login/{network}/callback', 'App\Http\Controllers\Auth\NetworkController@callback');
+
 Route::get('/banner/get', 'App\Http\Controllers\BannerController@get')->name('banner.get');
 Route::get('/banner/{banner}/click', 'App\Http\Controllers\BannerController@click')->name('banner.click');
 
