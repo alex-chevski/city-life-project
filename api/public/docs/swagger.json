@@ -1,0 +1,201 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "CityLife API",
+        "description": "HTTP JSON API",
+        "contact": {
+            "name": ""
+        },
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "HTTPS"
+        }
+    ],
+    "paths": {
+        "/adverts": {
+            "get": {
+                "tags": [
+                    "Adverts"
+                ],
+                "operationId": "22f5706a7cc2021a0ca407634b5d82be",
+                "responses": {
+                    "200": {
+                        "description": "Success response"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [],
+                        "OAuth2": []
+                    }
+                ]
+            }
+        },
+        "/adverts/{advertId}": {
+            "get": {
+                "tags": [
+                    "Adverts"
+                ],
+                "operationId": "b8ccbd27f4ff5d21433eb787f042be82",
+                "responses": {
+                    "200": {
+                        "description": "Success response"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [],
+                        "OAuth2": []
+                    }
+                ]
+            }
+        },
+        "/adverts/{advertId}/favorite": {
+            "post": {
+                "tags": [
+                    "Adverts"
+                ],
+                "operationId": "daf9cb6a29cc0165302f16ff4770e1e2",
+                "responses": {
+                    "201": {
+                        "description": "Success response"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [],
+                        "OAuth2": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Adverts"
+                ],
+                "operationId": "9e6d97cbca508be369996da7b05f6327",
+                "responses": {
+                    "204": {
+                        "description": "Success response"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [],
+                        "OAuth2": []
+                    }
+                ]
+            }
+        },
+        "/register": {
+            "post": {
+                "tags": [
+                    "Profile"
+                ],
+                "operationId": "6526a7845e1078d2ca4047f9dfeb7388",
+                "responses": {
+                    "201": {
+                        "description": "Success response"
+                    }
+                }
+            }
+        },
+        "/": {
+            "get": {
+                "tags": [
+                    "Info"
+                ],
+                "operationId": "cf951e643228746449d03cd83b188980",
+                "responses": {
+                    "200": {
+                        "description": "API version"
+                    }
+                }
+            }
+        },
+        "/user/favorites": {
+            "get": {
+                "tags": [
+                    "Favorites"
+                ],
+                "operationId": "a041101c22dbd91b01c75044517175aa",
+                "responses": {
+                    "200": {
+                        "description": "Success response"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [],
+                        "OAuth2": []
+                    }
+                ]
+            }
+        },
+        "/user/favorites/{advertId}": {
+            "delete": {
+                "tags": [
+                    "Favorites"
+                ],
+                "operationId": "51b5afa6272e746d07f1e0edb5168c85",
+                "responses": {
+                    "204": {
+                        "description": "Success response"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [],
+                        "OAuth2": []
+                    }
+                ]
+            }
+        },
+        "/user": {
+            "get": {
+                "tags": [
+                    "Profile"
+                ],
+                "operationId": "e8e42fa22aeacc6854b2347f08f9c761",
+                "responses": {
+                    "200": {
+                        "description": "Success response"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [],
+                        "OAuth2": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Profile"
+                ],
+                "operationId": "4d471f45098fecbafcd2f589b41448ec",
+                "responses": {
+                    "200": {
+                        "description": "Success response"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [],
+                        "OAuth2": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "OAuth2": {
+                "type": "oauth2",
+                "name": "auth",
+                "in": "query"
+            }
+        }
+    }
+}

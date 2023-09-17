@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace App\Exceptions;
 
+use DomainException;
+use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Throwable;
 
 final class Handler extends ExceptionHandler
@@ -25,7 +29,14 @@ final class Handler extends ExceptionHandler
      */
     public function register(): void
     {
-        $this->reportable(static function (Throwable $e): void {
+        $this->reportable(static function (Throwable $e): void {});
+
+        $this->renderable(static function (Exception $exception, Request $request) {
+            if ($exception instanceof DomainException && $request->expectsJson()) {
+                return response()->json([
+                    'message' => $exception->getMessage(),
+                ], Response::HTTP_BAD_REQUEST);
+            }
         });
     }
 }
