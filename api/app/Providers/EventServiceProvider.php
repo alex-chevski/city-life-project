@@ -18,11 +18,10 @@ final class EventServiceProvider extends ServiceProvider
     protected $listen = [
         Registered::class => [
             SendEmailVerificationNotification::class,
-
         ],
         \SocialiteProviders\Manager\SocialiteWasCalled::class => [
-        // ... other providers
-            \SocialiteProviders\VKontakte\VKontakteExtendSocialite::class.'@handle',
+            // ... other providers
+            \SocialiteProviders\VKontakte\VKontakteExtendSocialite::class . '@handle',
         ],
     ];
 

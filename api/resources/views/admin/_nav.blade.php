@@ -16,6 +16,11 @@
         <li class="nav-item"><a class="nav-link{{ $page === 'regions' ? ' active' : '' }}"
                 href="{{ route('admin.regions.index') }}">Регионы</a></li>
     @endcan
+
+    @can('manage-pages')
+        <li class="nav-item"><a class="nav-link{{ $page === 'pages' ? ' active' : '' }}"
+                href="{{ route('admin.pages.index') }}">Страницы</a></li>
+    @endcan
     @can('manage-adverts-categories')
         <li class="nav-item"><a class="nav-link{{ $page === 'adverts_categories' ? ' active' : '' }}"
                 href="{{ route('admin.adverts.categories.index') }}">Категории</a></li>

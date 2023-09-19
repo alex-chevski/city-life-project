@@ -42,7 +42,7 @@ class BannerService
                         'type' => 'number',
                         'script' => [
                             'source' => 'Math.random() * 200000',
-                            'lang' => 'painless'
+                            'lang' => 'painless',
                         ],
                         'order' => 'asc',
                     ],

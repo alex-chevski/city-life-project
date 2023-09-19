@@ -171,6 +171,7 @@ return [
         App\Providers\CarbonServiceProvider::class,
         App\Providers\CacheServiceProvider::class,
         App\Providers\SearchServiceProvider::class,
+        App\Providers\ComposerServiceProvider::class,
     ])->toArray(),
 
     /*
@@ -185,6 +186,7 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
+        // 'View' => Illuminate\Support\Facades\View::class,
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
 ];

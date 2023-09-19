@@ -26,8 +26,15 @@ final class AuthServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->registerPolicies();
+        $this->registerPermissions();
+    }
 
-        // Adverts
+    private function registerPermissions(): void
+    {
+        // pages
+        Gate::define('manage-pages', static fn (User $user) => $user->isAdmin());
+
+        // adverts
         Gate::define('moderate-adverts', static fn (User $user, Advert $advert) => $user->isAdmin() || $user->isModerator());
         Gate::define('show-advert', static fn (User $user, Advert $advert) => $user->isAdmin() || $user->isModerator() || $advert->user_id === $user->id);
         Gate::define('edit-own-advert', static fn (User $user, Advert $advert) => $advert->user_id === $user->id);

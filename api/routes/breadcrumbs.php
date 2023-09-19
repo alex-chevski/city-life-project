@@ -3,10 +3,12 @@
 declare(strict_types=1);
 
 use App\Http\Router\AdvertsPath;
+use App\Http\Router\PagePath;
 use App\Models\Adverts\Advert\Advert;
 use App\Models\Adverts\Attribute;
 use App\Models\Adverts\Category;
 use App\Models\Banner\Banner;
+use App\Models\Page;
 use App\Models\Region;
 use App\Models\User\User;
 use DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator as Crumbs;
@@ -40,6 +42,15 @@ Breadcrumbs::register('password.request', function (Crumbs $crumbs): void {
 Breadcrumbs::register('password.reset', function (Crumbs $crumbs): void {
     $crumbs->parent('password.request');
     $crumbs->push('', route('password.reset', Str::uuid()));
+});
+
+Breadcrumbs::register('page', function (Crumbs $crumbs, PagePath $path): void {
+    if ($parent = $path->page->parent) {
+        $crumbs->parent('page', $path->withPage($path->page->parent));
+    } else {
+        $crumbs->parent('home');
+    }
+    $crumbs->push($path->page->title, route('page', $path));
 });
 
 // Adverts
@@ -130,7 +141,7 @@ Breadcrumbs::register('cabinet.favorites.index', function (Crumbs $crumbs): void
 
 Breadcrumbs::register('cabinet.banners.index', function (Crumbs $crumbs): void {
     $crumbs->parent('cabinet.home');
-    $crumbs->push('Banners', route('cabinet.banners.index'));
+    $crumbs->push('Баннеры', route('cabinet.banners.index'));
 });
 
 Breadcrumbs::register('cabinet.banners.show', function (Crumbs $crumbs, Banner $banner): void {
@@ -140,17 +151,17 @@ Breadcrumbs::register('cabinet.banners.show', function (Crumbs $crumbs, Banner $
 
 Breadcrumbs::register('cabinet.banners.edit', function (Crumbs $crumbs, Banner $banner): void {
     $crumbs->parent('cabinet.banners.show', $banner);
-    $crumbs->push('Edit', route('cabinet.banners.edit', $banner));
+    $crumbs->push('Редактировать', route('cabinet.banners.edit', $banner));
 });
 
 Breadcrumbs::register('cabinet.banners.file', function (Crumbs $crumbs, Banner $banner): void {
     $crumbs->parent('cabinet.banners.show', $banner);
-    $crumbs->push('File', route('cabinet.banners.file', $banner));
+    $crumbs->push('Файл', route('cabinet.banners.file', $banner));
 });
 
 Breadcrumbs::register('cabinet.banners.create', function (Crumbs $crumbs): void {
     $crumbs->parent('cabinet.banners.index');
-    $crumbs->push('Create', route('cabinet.banners.create'));
+    $crumbs->push('Создать', route('cabinet.banners.create'));
 });
 
 Breadcrumbs::register('cabinet.banners.create.region', function (Crumbs $crumbs, Category $category, Region $region = null): void {
@@ -163,10 +174,36 @@ Breadcrumbs::register('cabinet.banners.create.banner', function (Crumbs $crumbs,
     $crumbs->push($region ? $region->name : 'All', route('cabinet.banners.create.banner', [$category, $region]));
 });
 
+// Pages
+
+Breadcrumbs::register('admin.pages.index', function (Crumbs $crumbs): void {
+    $crumbs->parent('admin.home');
+    $crumbs->push('Страницы', route('admin.pages.index'));
+});
+
+Breadcrumbs::register('admin.pages.create', function (Crumbs $crumbs): void {
+    $crumbs->parent('admin.pages.index');
+    $crumbs->push('Создать', route('admin.pages.create'));
+});
+
+Breadcrumbs::register('admin.pages.show', function (Crumbs $crumbs, Page $page): void {
+    if ($parent = $page->parent) {
+        $crumbs->parent('admin.pages.show', $parent);
+    } else {
+        $crumbs->parent('admin.pages.index');
+    }
+    $crumbs->push($page->title, route('admin.pages.show', $page));
+});
+
+Breadcrumbs::register('admin.pages.edit', function (Crumbs $crumbs, Page $page): void {
+    $crumbs->parent('admin.pages.show', $page);
+    $crumbs->push('Редактировать', route('admin.pages.edit', $page));
+});
+
 // Admin
 Breadcrumbs::register('admin.home', function (Crumbs $crumbs): void {
     $crumbs->parent('home');
-    $crumbs->push('Админ-Панель', route('admin.home'));
+    $crumbs->push('Панель админа', route('admin.home'));
 });
 
 // Users
@@ -194,7 +231,7 @@ Breadcrumbs::register('admin.users.edit', function (Crumbs $crumbs, User $user):
 
 Breadcrumbs::register('admin.banners.index', function (Crumbs $crumbs): void {
     $crumbs->parent('admin.home');
-    $crumbs->push('Banners', route('admin.banners.index'));
+    $crumbs->push('Баннеры', route('admin.banners.index'));
 });
 
 Breadcrumbs::register('admin.banners.show', function (Crumbs $crumbs, Banner $banner): void {
@@ -204,12 +241,12 @@ Breadcrumbs::register('admin.banners.show', function (Crumbs $crumbs, Banner $ba
 
 Breadcrumbs::register('admin.banners.edit', function (Crumbs $crumbs, Banner $banner): void {
     $crumbs->parent('admin.banners.show', $banner);
-    $crumbs->push('Edit', route('admin.banners.edit', $banner));
+    $crumbs->push('Редактировать', route('admin.banners.edit', $banner));
 });
 
 Breadcrumbs::register('admin.banners.reject', function (Crumbs $crumbs, Banner $banner): void {
     $crumbs->parent('admin.banners.show', $banner);
-    $crumbs->push('Reject', route('admin.banners.reject', $banner));
+    $crumbs->push('Отклонить', route('admin.banners.reject', $banner));
 });
 
 // Regions

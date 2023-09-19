@@ -12,6 +12,7 @@
         <directory name="public" />
         <directory name="database" />
         <directory name="routes" />
+        <directory name="app" />
         <ignoreFiles>
             <directory name="vendor" />
         </ignoreFiles>

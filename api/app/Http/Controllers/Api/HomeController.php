@@ -25,12 +25,10 @@ namespace App\Http\Controllers\Api;
  *
  * @OA\SecuritySchemes(
  *        securityScheme="Bearer",
-*         type="apiKey",
-*         name="Authorization",
-*         in="query",
+ *         type="apiKey",
+ *         name="Authorization",
+ *         in="query",
  * )
- *
- *
  */
 class HomeController
 {

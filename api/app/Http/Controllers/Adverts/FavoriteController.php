@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Adverts;
 
-use App\Models\Adverts\Advert\Advert;
 use App\Http\Controllers\Controller;
+use App\Models\Adverts\Advert\Advert;
 use App\UseCases\Adverts\FavoriteService;
+use DomainException;
 use Illuminate\Support\Facades\Auth;
 
 class FavoriteController extends Controller
@@ -21,7 +24,7 @@ class FavoriteController extends Controller
     {
         try {
             $this->service->add(Auth::id(), $advert->id);
-        } catch (\DomainException $e) {
+        } catch (DomainException $e) {
             return back()->with('error', $e->getMessage());
         }
 
@@ -32,7 +35,7 @@ class FavoriteController extends Controller
     {
         try {
             $this->service->remove(Auth::id(), $advert->id);
-        } catch (\DomainException $e) {
+        } catch (DomainException $e) {
             return back()->with('error', $e->getMessage());
         }
 

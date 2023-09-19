@@ -32,7 +32,7 @@
                     </form>
                 </div>
                 <div class="col-md-3" style="text-align: right">
-                    <p><a href="{{ route('cabinet.adverts.create') }}" class="btn btn-success"><span
+                    <p><a href="{{ route('cabinet.adverts.create') }}" class="btn btn-primary"><span
                                 class="fa fa-plus"></span> Разместить объявление</a></p>
                 </div>
             </div>

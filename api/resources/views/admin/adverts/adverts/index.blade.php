@@ -16,7 +16,7 @@
                     </div>
                     <div class="col-sm-3">
                         <div class="form-group">
-                            <label for="name" class="col-form-label">Название</label>
+                            <label for="name" class="col-form-label">Заголовок</label>
                             <input id="name" class="form-control" name="name" value="{{ request('name') }}">
                         </div>
                     </div>
@@ -44,7 +44,9 @@
                             <select id="status" class="form-control" name="status">
                                 <option value=""></option>
                                 @foreach ($statuses as $value => $label)
-                                    <option value="{{ $value }}"{{ $value === request('status') ? ' selected' : '' }}>{{ $label }}</option>
+                                    <option
+                                        value="{{ $value }}"{{ $value === request('status') ? ' selected' : '' }}>
+                                        {{ $label }}</option>
                                 @endforeach;
                             </select>
                         </div>
@@ -63,43 +65,43 @@
 
     <table class="table table-striped">
         <thead>
-        <tr>
-            <th>ID</th>
-            <th>Дата Обновления</th>
-            <th>Название</th>
-            <th>Пользователь</th>
-            <th>Адрес</th>
-            <th>Категория</th>
-            <th>Статус</th>
-        </tr>
+            <tr>
+                <th>ID</th>
+                <th>Дата Обновления</th>
+                <th>Название</th>
+                <th>Пользователь</th>
+                <th>Адрес</th>
+                <th>Категория</th>
+                <th>Статус</th>
+            </tr>
         </thead>
         <tbody>
 
-        @foreach ($adverts as $advert)
-            <tr>
-                <td>{{ $advert->id }}</td>
-                <td>{{ $advert->updated_at }}</td>
-                <td><a href="{{ route('adverts.show', $advert) }}" target="_blank">{{ $advert->title }}</a></td>
-                <td>{{ $advert->user->id }} - {{ $advert->user->name }}</td>
-                <td>
-                    @if ($advert->region)
-                        {{ $advert->region->id }} - {{ $advert->region->name }}
-                    @endif
-                </td>
-                <td>{{ $advert->category->id }} - {{ $advert->category->name }}</td>
-                <td>
-                    @if ($advert->isDraft())
-                        <span class="badge bg-secondary">Черновик</span>
-                    @elseif ($advert->isOnModeration())
-                        <span class="badge bg-primary">На Модерации</span>
-                    @elseif ($advert->isActive())
-                        <span class="badge bg-primary">Активно</span>
-                    @elseif ($advert->isClosed())
-                        <span class="badge bg-secondary">Закрыто</span>
-                    @endif
-                </td>
-            </tr>
-        @endforeach
+            @foreach ($adverts as $advert)
+                <tr>
+                    <td>{{ $advert->id }}</td>
+                    <td>{{ $advert->updated_at }}</td>
+                    <td><a href="{{ route('adverts.show', $advert) }}" target="_blank">{{ $advert->title }}</a></td>
+                    <td>{{ $advert->user->id }} - {{ $advert->user->name }}</td>
+                    <td>
+                        @if ($advert->region)
+                            {{ $advert->region->id }} - {{ $advert->region->name }}
+                        @endif
+                    </td>
+                    <td>{{ $advert->category->id }} - {{ $advert->category->name }}</td>
+                    <td>
+                        @if ($advert->isDraft())
+                            <span class="badge bg-secondary">Черновик</span>
+                        @elseif ($advert->isOnModeration())
+                            <span class="badge bg-primary">На Модерации</span>
+                        @elseif ($advert->isActive())
+                            <span class="badge bg-primary">Активно</span>
+                        @elseif ($advert->isClosed())
+                            <span class="badge bg-secondary">Закрыто</span>
+                        @endif
+                    </td>
+                </tr>
+            @endforeach
 
         </tbody>
     </table>
