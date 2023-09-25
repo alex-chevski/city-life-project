@@ -49,5 +49,6 @@ final class AuthServiceProvider extends ServiceProvider
         Gate::define('manage-adverts', static fn (User $user) => $user->isAdmin() || $user->isModerator());
         Gate::define('manage-regions', static fn (User $user) => $user->isAdmin());
         Gate::define('manage-banners', static fn (User $user) => $user->isAdmin() || $user->isModerator());
+        Gate::define('manage-tickets', static fn (User $user) => $user->isAdmin() || $user->isModerator());
     }
 }

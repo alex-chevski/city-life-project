@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Http\ViewComposers\MenuPagesComposer;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
-use App\Http\ViewComposers\MenuPagesComposer;
 
 class ComposerServiceProvider extends ServiceProvider
 {

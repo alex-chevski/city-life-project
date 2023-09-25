@@ -10,6 +10,7 @@ use App\Models\Adverts\Category;
 use App\Models\Banner\Banner;
 use App\Models\Page;
 use App\Models\Region;
+use App\Models\Ticket\Ticket;
 use App\Models\User\User;
 use DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator as Crumbs;
 use DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs;
@@ -200,10 +201,45 @@ Breadcrumbs::register('admin.pages.edit', function (Crumbs $crumbs, Page $page):
     $crumbs->push('Редактировать', route('admin.pages.edit', $page));
 });
 
+// Cabinet Tickets
+
+Breadcrumbs::register('cabinet.tickets.index', function (Crumbs $crumbs): void {
+    $crumbs->parent('cabinet.home');
+    $crumbs->push('Tickets', route('cabinet.tickets.index'));
+});
+
+Breadcrumbs::register('cabinet.tickets.create', function (Crumbs $crumbs): void {
+    $crumbs->parent('cabinet.tickets.index');
+    $crumbs->push('Create', route('cabinet.tickets.create'));
+});
+
+Breadcrumbs::register('cabinet.tickets.show', function (Crumbs $crumbs, Ticket $ticket): void {
+    $crumbs->parent('cabinet.tickets.index');
+    $crumbs->push($ticket->subject, route('cabinet.tickets.show', $ticket));
+});
+
 // Admin
+
 Breadcrumbs::register('admin.home', function (Crumbs $crumbs): void {
     $crumbs->parent('home');
     $crumbs->push('Панель админа', route('admin.home'));
+});
+
+// Tickets
+
+Breadcrumbs::register('admin.tickets.index', function (Crumbs $crumbs): void {
+    $crumbs->parent('admin.home');
+    $crumbs->push('Tickets', route('admin.tickets.index'));
+});
+
+Breadcrumbs::register('admin.tickets.show', function (Crumbs $crumbs, Ticket $ticket): void {
+    $crumbs->parent('admin.tickets.index');
+    $crumbs->push($ticket->subject, route('admin.tickets.show', $ticket));
+});
+
+Breadcrumbs::register('admin.tickets.edit', function (Crumbs $crumbs, Ticket $ticket): void {
+    $crumbs->parent('admin.tickets.show', $ticket);
+    $crumbs->push('Edit', route('admin.tickets.edit', $ticket));
 });
 
 // Users

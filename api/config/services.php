@@ -37,5 +37,4 @@ return [
         'client_secret' => env('VKONTAKTE_CLIENT_SECRET'),
         'redirect' => env('APP_URL') . '/login/vkontakte/callback',
     ],
-
 ];

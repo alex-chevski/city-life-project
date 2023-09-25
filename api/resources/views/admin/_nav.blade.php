@@ -31,4 +31,9 @@
                 href="{{ route('admin.users.index') }}">Пользователи</a></li>
     @endcan
 
+    @can('manage-tickets')
+        <li class="nav-item"><a class="nav-link{{ $page === 'tickets' ? ' active' : '' }}"
+                href="{{ route('admin.tickets.index') }}">Обращение пользователей</a></li>
+    @endcan
+
 </ul>
