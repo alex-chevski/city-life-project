@@ -122,6 +122,16 @@ Breadcrumbs::register('cabinet.adverts.create', function (Crumbs $crumbs): void 
     $crumbs->push('Создать', route('cabinet.adverts.create'));
 });
 
+Breadcrumbs::register('cabinet.adverts.edit', function (Crumbs $crumbs, Advert $advert): void {
+    $crumbs->parent('adverts.index');
+    $crumbs->push('Редактировать', route('cabinet.adverts.edit', [$advert]));
+});
+
+Breadcrumbs::register('cabinet.adverts.photos', function (Crumbs $crumbs, Advert $advert): void {
+    $crumbs->parent('adverts.index');
+    $crumbs->push('Фотографии', route('cabinet.adverts.edit', [$advert]));
+});
+
 Breadcrumbs::register('cabinet.adverts.create.region', function (Crumbs $crumbs, Category $category, Region $region = null): void {
     $crumbs->parent('cabinet.adverts.create');
     $crumbs->push($category->name, route('cabinet.adverts.create.region', [$category, $region]));

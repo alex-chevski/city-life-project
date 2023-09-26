@@ -8,7 +8,7 @@
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>ID</th>
+                <th>#</th>
                 <th>Имя</th>
                 <th>Регион</th>
                 <th>Категория</th>

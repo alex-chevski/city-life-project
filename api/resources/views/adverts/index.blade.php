@@ -71,7 +71,9 @@
                     <div class="advert mb-3">
                         <div class="row">
                             <div class="col-md-3">
-                                <div style="height: 180px; background: #f6f6f6; border: 1px solid #ddd"></div>
+                                <img style="height: 180px; border: 1px solid #ddd"
+                                    src="{{ asset('storage/' . $advert->photos->first()->file) }}" />
+
                             </div>
                             <div class="col-md-9">
                                 <span class="float-right">{{ $advert->price }}</span>

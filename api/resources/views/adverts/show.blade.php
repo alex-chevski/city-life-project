@@ -80,13 +80,13 @@
             <div style="margin-bottom: 20px">
                 <div class="row">
                     <div class="col-10">
-                        <div style="height: 400px; background: #f6f6f6; border: 1px solid #ddd"></div>
+                        <img style="height: 400px" src="{{ asset('storage/' . $advert->photos->first()->file) }}" />
                     </div>
                     <div class="col-2">
-                        <div style="height: 100px; background: #f6f6f6; border: 1px solid #ddd"></div>
-                        <div style="height: 100px; background: #f6f6f6; border: 1px solid #ddd"></div>
-                        <div style="height: 100px; background: #f6f6f6; border: 1px solid #ddd"></div>
-                        <div style="height: 100px; background: #f6f6f6; border: 1px solid #ddd"></div>
+                        @for ($i = 1; $i < $advert->photos->count(); $i++)
+                            <img style="height: 100px; border: 1px solid #ddd"
+                                src="{{ asset('storage/' . $advert->photos[$i]->file) }}" />
+                        @endfor
                     </div>
                 </div>
             </div>
@@ -184,8 +184,13 @@
 
         </div>
         <div class="col-md-3">
-            <div style="height: 400px; background: #f6f6f6; border: 1px solid #ddd; margin-bottom: 20px"></div>
-            <div style="height: 400px; background: #f6f6f6; border: 1px solid #ddd; margin-bottom: 20px"></div>
+
+            <div class="col-md-3">
+                <div class="banner mb-3" data-url="{{ route('banner.get') }}" data-format="240x400">
+                </div>
+            </div>
+            {{-- <div style="height: 400px; background: #f6f6f6; border: 1px solid #ddd; margin-bottom: 20px"></div> --}}
+            {{-- <div style="height: 400px; background: #f6f6f6; border: 1px solid #ddd; margin-bottom: 20px"></div> --}}
         </div>
     </div>
 

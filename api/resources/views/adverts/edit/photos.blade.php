@@ -15,11 +15,12 @@
         @csrf
 
         <div class="form-group">
-            <label for="photos" class="col-form-label">Название</label>
-            <input id="photos" type="file" class="form-control{{ $errors->has('title') ? ' is-invalid' : '' }}" name="files[]" multiple required>
+            <label for="photos" class="col-form-label">Фотографии</label>
+            <input id="photos" type="file" class="form-control{{ $errors->has('title') ? ' is-invalid' : '' }}"
+                name="files[]" multiple required>
         </div>
 
-        <div class="form-group">
+        <div class="form-group mt-3">
             <button type="submit" class="btn btn-primary">Загрузить</button>
         </div>
     </form>

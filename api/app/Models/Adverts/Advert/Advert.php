@@ -107,6 +107,15 @@ class Advert extends Model
         ]);
     }
 
+    public function setValue($id, $value): void
+    {
+        $this->values()->insert([
+            'advert_id' => $this->id,
+            'attribute_id' => $id,
+            'value' => $value,
+        ]);
+    }
+
     public function getValue($id)
     {
         foreach ($this->values as $value) {
@@ -162,6 +171,17 @@ class Advert extends Model
         return $this->hasMany(Photo::class, 'advert_id', 'id');
     }
 
+    public function addPhoto($photo): void
+    {
+        $this->checkCountPhotos($this->photos->count());
+
+        $this->photos()->create([
+            'file' => $photo,
+        ]);
+
+        $this->update();
+    }
+
     public function favorites()
     {
         return $this->belongsToMany(User::class, 'advert_favorites', 'advert_id', 'user_id');
@@ -200,5 +220,12 @@ class Advert extends Model
         return $query->whereHas('favorites', static function (Builder $query) use ($user): void {
             $query->where('user_id', $user->id);
         });
+    }
+
+    private function checkCountPhotos($count): void
+    {
+        if ($count > 5) {
+            throw new DomainException('Only 5 photos');
+        }
     }
 }

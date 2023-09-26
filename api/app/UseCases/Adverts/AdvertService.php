@@ -47,11 +47,7 @@ class AdvertService
             foreach ($category->allAttributes() as $attribute) {
                 $value = $request['attributes'][$attribute->id] ?? null;
                 if (!empty($value)) {
-                    $advert->values()->insert([
-                        'advert_id' => $advert->id,
-                        'attribute_id' => $attribute->id,
-                        'value' => $value,
-                    ]);
+                    $advert->setValue($attribute->id, $value);
                 }
             }
 
@@ -65,11 +61,12 @@ class AdvertService
 
         DB::transaction(static function () use ($request, $advert): void {
             foreach ($request['files'] as $file) {
-                $advert->photos()->create([
-                    'file' => $file->store('adverts', 'public'),
-                ]);
+                $advert->addPhoto($file->store('adverts', 'public'));
+                // $advert->photos()->create([
+                // 'file' => $file->store('adverts', 'public'),
+                // ]);
             }
-            $advert->update();
+            // $advert->update();
         });
     }
 
@@ -112,10 +109,7 @@ class AdvertService
             foreach ($advert->category->allAttributes() as $attribute) {
                 $value = $request['attributes'][$attribute->id] ?? null;
                 if (!empty($value)) {
-                    $advert->values()->create([
-                        'attribute_id' => $attribute->id,
-                        'value' => $value,
-                    ]);
+                    $advert->setValue($attribute->id, $value);
                 }
             }
             $advert->update();
