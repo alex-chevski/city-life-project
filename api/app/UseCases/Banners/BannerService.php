@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\UseCases\Banners;
 
+use App\Events\Banner\BannerClosed;
+use App\Events\Banner\ModerationPassed;
 use App\Http\Requests\Banner\CreateRequest;
 use App\Http\Requests\Banner\EditRequest;
 use App\Http\Requests\Banner\FileRequest;
@@ -168,6 +170,8 @@ class BannerService
         $banner = $this->getBanner($id);
 
         $banner->pay(Carbon::now());
+
+        event(new ModerationPassed($banner));
     }
 
     public function click(Banner $banner): void
@@ -181,15 +185,20 @@ class BannerService
         if (!$banner->canBeRemoved()) {
             throw new DomainException('Unable to remove the banner.');
         }
+
+        $file = $banner->file;
+
         $banner->delete();
-        Storage::delete('public/' . $banner->file);
+
+        event(new BannerClosed($banner, $file));
     }
 
     public function removeByAdmin($id): void
     {
         $banner = $this->getBanner($id);
+        $file = $banner->file;
         $banner->delete();
-        Storage::delete('public/' . $banner->file);
+        event(new BannerClosed($banner, $file));
     }
 
     // Robokassa

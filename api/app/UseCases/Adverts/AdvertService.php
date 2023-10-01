@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\UseCases\Adverts;
 
+use App\Events\Advert\AdvertClosed;
 use App\Events\Advert\ModerationPassed;
+use App\Events\Advert\ModerationRejected;
 use App\Http\Requests\Adverts\AttributesRequest;
 use App\Http\Requests\Adverts\CreateRequest;
 use App\Http\Requests\Adverts\EditRequest;
@@ -16,9 +18,15 @@ use App\Models\Region;
 use App\Models\User\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class AdvertService
 {
+    public function __construct(private EventDispatcher $dispatcher)
+    {
+        $this->dispatcher = $dispatcher;
+    }
+
     public function create($userId, $categoryId, $regionId, CreateRequest $request): Advert
     {
         /** @var User $user */
@@ -62,11 +70,7 @@ class AdvertService
         DB::transaction(static function () use ($request, $advert): void {
             foreach ($request['files'] as $file) {
                 $advert->addPhoto($file->store('adverts', 'public'));
-                // $advert->photos()->create([
-                // 'file' => $file->store('adverts', 'public'),
-                // ]);
             }
-            // $advert->update();
         });
     }
 
@@ -91,13 +95,14 @@ class AdvertService
     {
         $advert = $this->getAdvert($id);
         $advert->moderate(Carbon::now());
-        // event(new ModerationPassed($advert));
+        event(new ModerationPassed($advert));
     }
 
     public function reject($id, RejectRequest $request): void
     {
         $advert = $this->getAdvert($id);
         $advert->reject($request['reason']);
+        event(new ModerationRejected($advert));
     }
 
     public function editAttributes($id, AttributesRequest $request): void
@@ -119,6 +124,8 @@ class AdvertService
     public function expire(Advert $advert): void
     {
         $advert->expire();
+        // Later
+        // event();
     }
 
     public function close($id): void
@@ -130,7 +137,11 @@ class AdvertService
     public function remove($id): void
     {
         $advert = $this->getAdvert($id);
+
+        $files = $advert->photos;
         $advert->delete();
+
+        event(new AdvertClosed($advert, $files));
     }
 
     private function getAdvert($id): Advert

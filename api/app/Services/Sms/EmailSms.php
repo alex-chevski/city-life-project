@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Sms;
 
+use App\Mail\NotificationPhoneMail;
 use App\Mail\VerifyPhoneMail;
 use App\Models\User\User;
 use Illuminate\Contracts\Mail\Mailer as MailerInterface;
@@ -24,6 +25,10 @@ class EmailSms implements SmsSender
     {
         $user = $this->user->getByPhone($number);
 
-        $this->mailer->to($user->email)->send(new VerifyPhoneMail($number, $text));
+        if (is_numeric($text)) {
+            $this->mailer->to($user->email)->send(new VerifyPhoneMail($number, $text));
+        } else {
+            $this->mailer->to($user->email)->send(new NotificationPhoneMail($number, $text));
+        }
     }
 }
