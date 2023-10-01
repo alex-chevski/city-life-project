@@ -7,7 +7,7 @@ RUN apk update && apk add --upgrade --no-cache linux-headers && apk add --no-cac
 
 RUN apk add postgresql-dev \
 	&& docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
-	&& docker-php-ext-install pdo_pgsql
+	&& docker-php-ext-install pdo_pgsql pcntl
 
 RUN apk add --no-cache unzip
 

@@ -36,7 +36,7 @@ api-clear:
 	docker run --rm -v ${PWD}/api:/app -w /app alpine sh -c 'rm -rf public/build'
 
 # api-init: api-node-init api-composer-install api-permissions api-copy-to-env api-generate-key api-migrate-database
-api-init: api-node-init api-composer-install api-permissions api-migrate-database
+api-init: api-node-init api-composer-install api-permissions api-migrate-database api-search-init
 
 api-permissions:
 	docker run --rm -v ${PWD}/api:/app -w /app alpine chmod -R 755 .
@@ -61,7 +61,6 @@ api-test:
 
 api-migrate-database:
 	docker compose run --rm api-php-cli php artisan migrate
-	docker compose run --rm api-php-cli php artisan db:seed
 
 api-migrate-database-refresh:
 	docker compose run --rm api-php-cli php artisan migrate:refresh
@@ -93,6 +92,24 @@ api-clear-cache-laravel:
 
 api-fake-ten-users-to-base:
 	docker compose run --rm api-php-cli php artisan db:seed
+
+api-horizon:
+	docker compose run --rm api-php-cli php artisan horizon
+
+api-horizon-pause:
+	docker compose run --rm api-php-cli php artisan horizon:pause
+
+api-horizon-continue:
+	docker compose run --rm api-php-cli php artisan horizon:continue
+
+api-horizon-terminate:
+	docker compose run --rm api-php-cli php artisan horizon:terminate
+
+api-search-init:
+	docker compose run --rm api-php-cli php artisan search:init
+
+api-search-reindex:
+	docker compose run --rm api-php-cli php artisan search:reindex
 
 api-node-init: api-yarn-install api-ready api-vite-build
 
