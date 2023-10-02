@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace App\Services\Sms;
 
 use GuzzleHttp\Client;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use InvalidArgumentException;
 
 // service https://sms.ru/
-class SmsRu implements SmsSender
+class SmsRu implements SmsSender, ShouldQueue
 {
     private $appId;
     private $url;
