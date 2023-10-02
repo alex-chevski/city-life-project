@@ -9,6 +9,7 @@ use App\Models\Banner\Banner;
 use App\Models\User\User;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
+use Laravel\Horizon\Horizon;
 
 final class AuthServiceProvider extends ServiceProvider
 {
@@ -27,6 +28,8 @@ final class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
         $this->registerPermissions();
+
+        Horizon::auth(static fn () => Gate::allows('horizon'));
     }
 
     private function registerPermissions(): void
@@ -50,5 +53,6 @@ final class AuthServiceProvider extends ServiceProvider
         Gate::define('manage-regions', static fn (User $user) => $user->isAdmin());
         Gate::define('manage-banners', static fn (User $user) => $user->isAdmin() || $user->isModerator());
         Gate::define('manage-tickets', static fn (User $user) => $user->isAdmin() || $user->isModerator());
+        Gate::define('horizon', static fn (User $user) => $user->isAdmin() || $user->isModerator());
     }
 }
