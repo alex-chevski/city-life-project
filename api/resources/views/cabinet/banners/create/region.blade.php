@@ -7,7 +7,7 @@
         <p>
             <a href="{{ route('cabinet.banners.create.banner', [$category, $region]) }}" class="btn btn-success">Добавить
                 Объявление
-                for {{ $region->name }}</a>
+                для {{ $region->name }}</a>
         </p>
     @else
         <p>

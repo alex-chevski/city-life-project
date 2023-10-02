@@ -7,7 +7,7 @@
 
         @if ($banner->canBeChanged())
             <a href="{{ route('cabinet.banners.edit', $banner) }}" class="btn btn-primary me-1">Редактировать</a>
-            <a href="{{ route('cabinet.banners.file', $banner) }}" class="btn btn-primary me-1">Добавить новый баннер</a>
+            <a href="{{ route('cabinet.banners.file', $banner) }}" class="btn btn-primary me-1">Добавить новую фотографию</a>
         @endif
 
         @if ($banner->isDraft())
@@ -101,7 +101,7 @@
 
     <div class="card">
         <div class="card-body">
-            <img src="{{ asset('storage/' . $banner->file) }}" />
+            <img src="{{ Storage::url($banner->file) }}" />
         </div>
     </div>
 @endsection

@@ -80,12 +80,12 @@
             <div style="margin-bottom: 20px">
                 <div class="row">
                     <div class="col-10">
-                        <img style="height: 400px" src="{{ asset('storage/' . $advert->photos->first()->file) }}" />
+                        <img style="height: 400px" src="{{ Storage::url($advert->photos->first()->file ?? '') }}" />
                     </div>
                     <div class="col-2">
                         @for ($i = 1; $i < $advert->photos->count(); $i++)
                             <img style="height: 100px; border: 1px solid #ddd"
-                                src="{{ asset('storage/' . $advert->photos[$i]->file) }}" />
+                                src="{{ Storage::url($advert->photos[$i]->file) }}" />
                         @endfor
                     </div>
                 </div>

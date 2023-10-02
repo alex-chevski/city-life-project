@@ -14,7 +14,7 @@
         {{-- </p> --}}
     @endif
 
-    <p>Or choose nested region:</p>
+    <p>Или выберите другой регион:</p>
 
     <ul>
         @foreach ($regions as $current)

@@ -9,6 +9,7 @@ use App\Http\Requests\Adverts\SearchRequest;
 use App\Http\Router\AdvertsPath;
 use App\Models\Adverts\Advert\Advert;
 use App\Models\Adverts\Category;
+use App\Models\Banner\Banner;
 use App\Models\Region;
 use App\UseCases\Adverts\SearchService;
 use Illuminate\Support\Facades\Auth;
@@ -56,7 +57,7 @@ class AdvertController extends Controller
         ));
     }
 
-    public function show(Advert $advert)
+    public function show(Advert $advert, Banner $banner)
     {
         if (!($advert->isActive() || Gate::allows('show-advert', $advert))) {
             abort(403);

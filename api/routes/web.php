@@ -146,7 +146,7 @@ Route::group(
             Route::group(['prefix' => 'adverts', 'as' => 'adverts.'], static function (): void {
                 Route::get('/', 'AdvertController@index')->name('index');
                 Route::get('/{advert}/edit', 'AdvertController@editForm')->name('edit');
-                Route::put('/{advert}/edit', 'AdvertController@editForm');
+                Route::put('/{advert}/edit', 'AdvertController@edit');
                 Route::get('/{advert}/photos', 'AdvertController@photosForm')->name('photos');
                 Route::post('/{advert}/photos', 'AdvertController@photos');
                 Route::get('{advert}/attributes', 'AdvertController@attributesForm')->name('attributes');

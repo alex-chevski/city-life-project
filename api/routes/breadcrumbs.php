@@ -369,6 +369,16 @@ Breadcrumbs::register('admin.adverts.adverts.index', function (Crumbs $crumbs): 
     $crumbs->push('Категории', route('admin.adverts.adverts.index'));
 });
 
+Breadcrumbs::register('admin.adverts.adverts.', function (Crumbs $crumbs): void {
+    $crumbs->parent('admin.home');
+    $crumbs->push('Категории', route('admin.adverts.adverts.index'));
+});
+
+Breadcrumbs::register('admin.adverts.adverts.photos', function (Crumbs $crumbs, Advert $advert): void {
+    $crumbs->parent('admin.home');
+    $crumbs->push('Фотографии', route('admin.adverts.adverts.index', [$advert]));
+});
+
 Breadcrumbs::register('admin.adverts.adverts.edit', function (Crumbs $crumbs, Advert $advert): void {
     $crumbs->parent('admin.home');
     $crumbs->push($advert->title, route('admin.adverts.adverts.edit', $advert));

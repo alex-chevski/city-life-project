@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\Adverts;
 
 use App\Models\Adverts\Category;
