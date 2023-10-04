@@ -62,12 +62,13 @@ The queue Horizon can be accessed at (only for admin or moderator)
 
 After auth to get access to admin panel you must add role admin or moderator
 
-    php artisan user:role your@email.com admin or moderator
+    cd city-life-project && docker compose run --rm api-php-cli php artisan user:role your_email_auth admin
+    cd city-life-project && docker compose run --rm api-php-cli php artisan user:role your_email_auth moderator
 
 To try build Elasticsearch
 
-    php artisan search:init
-    php artisan search:reindex
+    cd city-life-project && make api-search-init
+    cd city-life-project && make api-search-reindex
 
 To seed database with data using seed classes
 
