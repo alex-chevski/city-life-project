@@ -75,7 +75,7 @@ class InitCommand extends Command
     {
         try {
             $this->client->indices()->delete([
-                'index' => 'advert',
+                'index' => 'adverts',
             ]);
         } catch (Exception $e) {
         }
