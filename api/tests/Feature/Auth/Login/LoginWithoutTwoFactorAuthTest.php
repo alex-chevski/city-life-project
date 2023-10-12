@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\Auth;
+namespace Tests\Feature\Auth\Login;
 
 use App\Models\User\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;

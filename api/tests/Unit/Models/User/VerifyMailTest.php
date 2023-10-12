@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Unit\Models\User;
+namespace Tests\Unit\Models\User;
 
 use App\Models\User\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;

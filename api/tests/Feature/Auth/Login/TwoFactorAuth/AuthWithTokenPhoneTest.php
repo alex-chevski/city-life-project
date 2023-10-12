@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\Auth;
+namespace Tests\Feature\Auth\Login\TwoFactorAuth;
 
 use App\Models\User\User;
 use App\Services\Auth\Tokenizer\TokenizerSms;
