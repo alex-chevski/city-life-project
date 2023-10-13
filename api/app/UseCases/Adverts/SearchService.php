@@ -31,9 +31,9 @@ class SearchService
                 '_source' => ['id'],
                 'from' => ($page - 1) * $perPage,
                 'size' => $perPage,
-                'sort' => empty($request['text']) ? [
-                    ['published_at' => ['order' => 'desc']],
-                ] : [],
+                // 'sort' => empty($request['text']) ? [
+                    // ['published_at' => ['order' => 'desc']],
+                // ] : [],
                 'aggs' => [
                     'group_by_region' => [
                         'terms' => [
@@ -89,7 +89,7 @@ class SearchService
             $items = Advert::active()
                 ->with(['category', 'region'])
                 ->whereIn('id', $ids)
-                ->orderBy('id')
+                ->orderByDesc('published_at')
                 ->get();
             $pagination = new LengthAwarePaginator($items, $response['hits']['total']['value'], $perPage, $page);
         } else {
