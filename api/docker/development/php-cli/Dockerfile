@@ -26,3 +26,5 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/bin --fil
 	&& rm -rf /root/.composer/cache
 
 WORKDIR /app
+
+CMD ["supercronic", "crontab"]

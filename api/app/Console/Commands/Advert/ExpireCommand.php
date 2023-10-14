@@ -26,6 +26,9 @@ class ExpireCommand extends Command
     {
         $success = true;
 
+        // logic notify mail user
+
+        // to close adverts expired
         foreach (Advert::active()->where('expired_at', '<', Carbon::now())->cursor() as $advert) {
             try {
                 $this->service->expire($advert);
