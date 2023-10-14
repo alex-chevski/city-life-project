@@ -15,6 +15,7 @@ Is a web portfolio application for rent an apartment.
 - [Summernote](https://summernote.org/).
 - [Font Awesome](https://fontawesome.com/).
 - [Xdebug](https://xdebug.org/).
+- [Cron] (https://github.com/aptible/supercronic).
 - [NGINX](https://www.nginx.com/).
 
 ### Using components Laravel
@@ -35,6 +36,10 @@ Run in Linux, MacOS or Windows WSL terminal the docker development server and bu
 Run Horizon(queue)
 
     cd city-life-project && make api-horizon
+
+Cron runs by default to view the task
+
+    make api-cron-task-show
 
 After all stop the project
 
