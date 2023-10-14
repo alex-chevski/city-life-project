@@ -9,6 +9,10 @@ RUN apk add postgresql-dev \
 	&& docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
 	&& docker-php-ext-install pdo_pgsql pcntl
 
+RUN apk add --no-cache supercronic shadow \
+    && apk add --update busybox-suid \
+    && useradd -m app
+
 RUN apk add --no-cache unzip
 
 RUN mv $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini
@@ -17,7 +21,6 @@ COPY ./common/php/conf.d /usr/local/etc/php/conf.d
 COPY ./development/php/conf.d /usr/local/etc/php/conf.d
 
 ENV COMPOSER_ALLOW_SUPERUSER 1
-
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/bin --filename=composer --version=2.5.8 --quiet --no-plugins --no-scripts \
 	&& rm -rf /root/.composer/cache
