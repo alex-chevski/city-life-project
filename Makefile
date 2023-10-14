@@ -110,8 +110,8 @@ api-search-init:
 api-start-cron:
 	docker compose run --rm api-php-cli supercronic crontab
 
-api-cron-working-show:
-	docker logs city-life-api-php-cli-1
+api-cron-task-show:
+	docker logs city-life-project-api-php-cli-1
 
 api-search-reindex:
 	docker compose run --rm api-php-cli php artisan search:reindex
