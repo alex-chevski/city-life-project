@@ -1,4 +1,9 @@
-init: docker-down-clear api-clear docker-pull docker-memory docker-build docker-up api-init
+init: docker-down-clear \
+	api-clear frontend-clear \
+	docker-pull docker-memory docker-build docker-up \
+	frontend-init api-init
+
+
 up: docker-memory docker-up
 down: docker-down
 clear: docker-down-clear
@@ -129,3 +134,14 @@ api-vite-build:
 
 api-vite-remove:
 	docker run --rm -v ${PWD}/api:/app -w /app alpine sh -c 'rm -rf public/build'
+
+frontend-clear:
+	docker run --rm -v ${PWD}/frontend:/app -w /app alpine sh -c 'rm -rf .ready build'
+
+frontend-init: frontend-yarn-install frontend-ready
+
+frontend-yarn-install:
+	docker compose run --rm frontend-node-cli yarn install
+
+frontend-ready:
+	docker run --rm -v ${PWD}/frontend:/app -w /app alpine touch .ready
