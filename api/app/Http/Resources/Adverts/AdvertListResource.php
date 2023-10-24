@@ -49,27 +49,3 @@ class AdvertListResource extends JsonResource
         ];
     }
 }
-
-/**
- * @OA\Definition(
- *     definition="AdvertList",
- *     type="object",
- *     @OA\Property(property="id", type="integer"),
- *     @OA\Property(property="user", type="object",
- *         @OA\Property(property="name", type="string"),
- *         @OA\Property(property="phone", type="string"),
- *     ),
- *     @OA\Property(property="category", type="object",
- *         @OA\Property(property="id", type="integer"),
- *         @OA\Property(property="name", type="string"),
- *     ),
- *     @OA\Property(property="region", type="object",
- *         @OA\Property(property="id", type="integer"),
- *         @OA\Property(property="name", type="string"),
- *     ),
- *     @OA\Property(property="title", type="string"),
- *     @OA\Property(property="price", type="integer"),
- *     @OA\Property(property="date", type="date"),
- *     @OA\Property(property="photo", type="string"),
- * )
- */

@@ -20,18 +20,6 @@ class ProfileController extends Controller
         $this->service = $service;
     }
 
-    /**
-     * @OA\Get(
-     *     path="/user",
-     *     tags={"Profile"},
-     *     @OA\Response(
-     *         response=200,
-     *         description="Success response",
-     *         @OA\Schema(ref="#/definitions/Profile"),
-     *     ),
-     *     security={{"Bearer": {}, "OAuth2": {}}}
-     * )
-     */
     public function show(Request $request)
     {
         /**
@@ -41,18 +29,6 @@ class ProfileController extends Controller
         return new ProfileResource($user);
     }
 
-    /**
-     * @OA\Put(
-     *     path="/user",
-     *     tags={"Profile"},
-     *     @OA\Response(
-     *         response=200,
-     *         description="Success response",
-     *         @OA\Schema(ref="#/definitions/Profile"),
-     *     ),
-     *     security={{"Bearer": {}, "OAuth2": {}}}
-     * )
-     */
     public function update(ProfileEditRequest $request)
     {
         $this->service->edit($user = $request->user()->id, $request);

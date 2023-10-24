@@ -19,34 +19,12 @@ class FavoriteController extends Controller
         $this->service = $service;
     }
 
-    /**
-     * @OA\Post(
-     *     path="/adverts/{advertId}/favorite",
-     *     tags={"Adverts"},
-     *     @OA\Response(
-     *         response=201,
-     *         description="Success response",
-     *     ),
-     *     security={{"Bearer": {}, "OAuth2": {}}}
-     * )
-     */
     public function add(Advert $advert)
     {
         $this->service->add(Auth::id(), $advert->id);
         return response()->json([], Response::HTTP_CREATED);
     }
 
-    /**
-     * @OA\Delete(
-     *     path="/adverts/{advertId}/favorite",
-     *     tags={"Adverts"},
-     *     @OA\Response(
-     *         response=204,
-     *         description="Success response",
-     *     ),
-     *     security={{"Bearer": {}, "OAuth2": {}}}
-     * )
-     */
     public function remove(Advert $advert)
     {
         $this->service->remove(Auth::id(), $advert->id);
