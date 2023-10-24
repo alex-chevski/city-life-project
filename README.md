@@ -5,17 +5,18 @@ Is a web portfolio application for rent an apartment.
 ### Using web tools
 
 - [Laravel](https://laravel.com).
-- [Docker and Docker compose](https://www.docker.com/).
+- [Docker compose](https://github.com/docker/compose).
 - [Redis](https://redis.io/).
 - [Mailhog](https://github.com/mailhog/MailHog).
 - [Elasticsearch](https://www.elastic.co/).
 - [PostgreSQL](https://www.postgresql.org/).
+- [React](https://react.dev/).
 - [Swagger](https://swagger.io/).
 - [Bootstrap](https://getbootstrap.com/).
 - [Summernote](https://summernote.org/).
 - [Font Awesome](https://fontawesome.com/).
 - [Xdebug](https://xdebug.org/).
-- [Cron] (https://github.com/aptible/supercronic).
+- [Cron](https://github.com/aptible/supercronic).
 - [NGINX](https://www.nginx.com/).
 
 ### Using components Laravel
@@ -36,10 +37,6 @@ Run in Linux, MacOS or Windows WSL terminal the docker development server and bu
 Run Horizon(queue)
 
     cd city-life-project && make api-horizon
-
-Cron runs by default to view the task
-
-    make api-cron-task-show
 
 After all stop the project
 
@@ -63,6 +60,10 @@ The queue Horizon can be accessed at (only for admin or moderator)
 
     https://localhost:8081/horizon/dashboard
 
+The application React can be accessed at
+
+    https://localhost:8080
+
 ## Additional
 
 After auth to get access to admin panel you must add role admin or moderator
@@ -74,6 +75,14 @@ To try build Elasticsearch
 
     cd city-life-project && make api-search-init
     cd city-life-project && make api-search-reindex
+
+To generate secret grant password token client for api auth
+
+    cd city-life-project && make api-generate-token-passport
+
+Cron runs by default to view the task
+
+    make api-cron-task-show
 
 To seed database with data using seed classes
 

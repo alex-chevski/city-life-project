@@ -135,6 +135,9 @@ api-vite-build:
 api-vite-remove:
 	docker run --rm -v ${PWD}/api:/app -w /app alpine sh -c 'rm -rf public/build'
 
+api-generate-token-passport:
+	docker compose run --rm api-php-cli php artisan passport:install --force
+
 frontend-clear:
 	docker run --rm -v ${PWD}/frontend:/app -w /app alpine sh -c 'rm -rf .ready build'
 
