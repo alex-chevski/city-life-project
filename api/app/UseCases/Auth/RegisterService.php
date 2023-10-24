@@ -54,8 +54,9 @@ class RegisterService
             $this->tokenizer->generate($this->now->copy()),
         );
 
-        $this->mailer->to($user->email)->send(new VerifyMail($user));
-        $this->dispatcher->dispatch(new Registered($user));
+        $this->mailer->to($user->email)->queue(new VerifyMail($user));
+
+        // $this->dispatcher->dispatch(new Registered($user));
     }
 
     /**

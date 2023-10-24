@@ -26,9 +26,9 @@ class EmailSms implements SmsSender
         $user = $this->user->getByPhone($number);
 
         if (is_numeric($text)) {
-            $this->mailer->to($user->email)->send(new VerifyPhoneMail($number, $text));
+            $this->mailer->to($user->email)->queue(new VerifyPhoneMail($number, $text));
         } else {
-            $this->mailer->to($user->email)->send(new NotificationPhoneMail($number, $text));
+            $this->mailer->to($user->email)->queue(new NotificationPhoneMail($number, $text));
         }
     }
 }

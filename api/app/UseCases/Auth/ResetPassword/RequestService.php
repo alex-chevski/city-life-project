@@ -45,7 +45,7 @@ class RequestService
             $this->date->copy(),
         );
 
-        $this->mailer->to($user->email)->send(new ResetPasswordMail($user));
+        $this->mailer->to($user->email)->queue(new ResetPasswordMail($user));
 
         // $this->dispatcher->dispatch(new Registered($user));
     }
