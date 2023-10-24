@@ -1,201 +1,558 @@
 {
-    "openapi": "3.0.0",
-    "info": {
-        "title": "CityLife API",
-        "description": "HTTP JSON API",
-        "contact": {
-            "name": ""
-        },
-        "version": "1.0"
-    },
-    "servers": [
-        {
-            "url": "HTTPS"
-        }
-    ],
-    "paths": {
-        "/adverts": {
-            "get": {
-                "tags": [
-                    "Adverts"
-                ],
-                "operationId": "22f5706a7cc2021a0ca407634b5d82be",
-                "responses": {
-                    "200": {
-                        "description": "Success response"
-                    }
-                },
-                "security": [
-                    {
-                        "Bearer": [],
-                        "OAuth2": []
-                    }
-                ]
-            }
-        },
-        "/adverts/{advertId}": {
-            "get": {
-                "tags": [
-                    "Adverts"
-                ],
-                "operationId": "b8ccbd27f4ff5d21433eb787f042be82",
-                "responses": {
-                    "200": {
-                        "description": "Success response"
-                    }
-                },
-                "security": [
-                    {
-                        "Bearer": [],
-                        "OAuth2": []
-                    }
-                ]
-            }
-        },
-        "/adverts/{advertId}/favorite": {
-            "post": {
-                "tags": [
-                    "Adverts"
-                ],
-                "operationId": "daf9cb6a29cc0165302f16ff4770e1e2",
-                "responses": {
-                    "201": {
-                        "description": "Success response"
-                    }
-                },
-                "security": [
-                    {
-                        "Bearer": [],
-                        "OAuth2": []
-                    }
-                ]
-            },
-            "delete": {
-                "tags": [
-                    "Adverts"
-                ],
-                "operationId": "9e6d97cbca508be369996da7b05f6327",
-                "responses": {
-                    "204": {
-                        "description": "Success response"
-                    }
-                },
-                "security": [
-                    {
-                        "Bearer": [],
-                        "OAuth2": []
-                    }
-                ]
-            }
-        },
-        "/register": {
-            "post": {
-                "tags": [
-                    "Profile"
-                ],
-                "operationId": "6526a7845e1078d2ca4047f9dfeb7388",
-                "responses": {
-                    "201": {
-                        "description": "Success response"
-                    }
-                }
-            }
-        },
-        "/": {
-            "get": {
-                "tags": [
-                    "Info"
-                ],
-                "operationId": "cf951e643228746449d03cd83b188980",
-                "responses": {
-                    "200": {
-                        "description": "API version"
-                    }
-                }
-            }
-        },
-        "/user/favorites": {
-            "get": {
-                "tags": [
-                    "Favorites"
-                ],
-                "operationId": "a041101c22dbd91b01c75044517175aa",
-                "responses": {
-                    "200": {
-                        "description": "Success response"
-                    }
-                },
-                "security": [
-                    {
-                        "Bearer": [],
-                        "OAuth2": []
-                    }
-                ]
-            }
-        },
-        "/user/favorites/{advertId}": {
-            "delete": {
-                "tags": [
-                    "Favorites"
-                ],
-                "operationId": "51b5afa6272e746d07f1e0edb5168c85",
-                "responses": {
-                    "204": {
-                        "description": "Success response"
-                    }
-                },
-                "security": [
-                    {
-                        "Bearer": [],
-                        "OAuth2": []
-                    }
-                ]
-            }
-        },
-        "/user": {
-            "get": {
-                "tags": [
-                    "Profile"
-                ],
-                "operationId": "e8e42fa22aeacc6854b2347f08f9c761",
-                "responses": {
-                    "200": {
-                        "description": "Success response"
-                    }
-                },
-                "security": [
-                    {
-                        "Bearer": [],
-                        "OAuth2": []
-                    }
-                ]
-            },
-            "put": {
-                "tags": [
-                    "Profile"
-                ],
-                "operationId": "4d471f45098fecbafcd2f589b41448ec",
-                "responses": {
-                    "200": {
-                        "description": "Success response"
-                    }
-                },
-                "security": [
-                    {
-                        "Bearer": [],
-                        "OAuth2": []
-                    }
-                ]
-            }
-        }
-    },
-    "components": {
-        "securitySchemes": {
-            "OAuth2": {
-                "type": "oauth2",
-                "name": "auth",
-                "in": "query"
-            }
-        }
+  "openapi": "3.0.0",
+  "info": {
+    "title": "CityLife API",
+    "description": "HTTP JSON API CityLife",
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "https://localhost:8081/api"
     }
+  ],
+  "tags": [
+    {
+      "name": "Adverts",
+      "description": "Everything about your adverts only authenticated users"
+    },
+    {
+      "name": "Profile",
+      "description": "Operations about User"
+    },
+    {
+      "name": "Favorites",
+      "description": "Favorites adverts of user"
+    },
+    {
+      "name": "Info",
+      "description": "Info version API"
+    }
+  ],
+  "paths": {
+    "/adverts": {
+      "get": {
+        "tags": ["Adverts"],
+        "summary": "Extract all Adverts",
+        "responses": {
+          "200": {
+            "description": "Success response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/AdvertList"
+                  }
+                }
+              }
+            }
+          }
+        },
+
+        "security": [
+          {
+            "Bearer": [],
+            "OAuth2": []
+          }
+        ]
+      }
+    },
+    "/adverts/{advertId}": {
+      "get": {
+        "tags": ["Adverts"],
+        "summary": "Extract Adverts by id",
+        "description": "ID of advert",
+        "parameters": [
+          {
+            "name": "advertId",
+            "in": "path",
+            "description": "ID of advert",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/AdvertDetail"
+                }
+              }
+            }
+          }
+        },
+
+        "security": [
+          {
+            "Bearer": [],
+            "OAuth2": []
+          }
+        ]
+      }
+    },
+    "/adverts/{advertId}/favorite": {
+      "post": {
+        "tags": ["Adverts"],
+        "summary": "Add an advert to favorites",
+        "description": "Add an advert to favorites",
+        "requestBody": {
+          "content": {
+            "application/json": {}
+          }
+        },
+        "parameters": [
+          {
+            "name": "advertId",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+
+        "security": [
+          {
+            "Bearer": [],
+            "OAuth2": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": ["Adverts"],
+        "summary": "Delete an advert from favorites",
+        "description": "Delete an advert from favorites",
+        "parameters": [
+          {
+            "name": "advertId",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OAuth2": []
+          }
+        ]
+      }
+    },
+    "/register": {
+      "post": {
+        "tags": ["Profile"],
+        "summary": "Register a new user",
+        "requestBody": {
+          "description": "Register a new user",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/RegisterRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Success response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/user/favorites": {
+      "get": {
+        "tags": ["Favorites"],
+        "summary": "Get all favorites adverts of user",
+        "responses": {
+          "200": {
+            "description": "Success response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/AdvertList"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OAuth2": []
+          }
+        ]
+      }
+    },
+    "/user/favorites/{advertId}": {
+      "delete": {
+        "tags": ["Favorites"],
+        "summary": "Deleted an advert for id",
+        "description": "Deletes an advert for id",
+        "parameters": [
+          {
+            "name": "advertId",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "204": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Success response"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OAuth2": []
+          }
+        ]
+      }
+    },
+    "/": {
+      "get": {
+        "tags": ["Info"],
+        "summary": "Info",
+        "responses": {
+          "200": {
+            "description": "API version",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "example": "CityLife Api"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user": {
+      "get": {
+        "tags": ["Profile"],
+        "summary": "Get auth user",
+        "responses": {
+          "200": {
+            "description": "Success response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/Profile"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OAuth2": []
+          }
+        ]
+      },
+      "put": {
+        "tags": ["Profile"],
+        "summary": "Change auth user",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ProfileEditRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OAuth2": []
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "ErrorModel": {
+      "required": ["code", "message"],
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "RegisterRequest": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string",
+          "example": "string@mail.com"
+        },
+        "password": {
+          "type": "string"
+        },
+        "password_confirmation": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "ProfileEditRequest": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "AdvertDetail": {
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "user": {
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "phone": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "category": {
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "region": {
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "title": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "price": {
+          "type": "integer"
+        },
+        "address": {
+          "type": "string"
+        },
+        "date": {
+          "properties": {
+            "published": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "expires": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "type": "object"
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AdvertValue"
+          }
+        },
+        "photos": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "type": "object"
+    },
+    "AdvertValue": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "AdvertList": {
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "user": {
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "phone": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "category": {
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "region": {
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "title": {
+          "type": "string"
+        },
+        "price": {
+          "type": "integer"
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "photo": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "Profile": {
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "email": {
+          "type": "string"
+        },
+        "phone": {
+          "properties": {
+            "number": {
+              "type": "string"
+            },
+            "verified": {
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
+        "name": {
+          "properties": {
+            "first": {
+              "type": "string"
+            },
+            "last": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "type": "object"
+    }
+  },
+
+  "components": {
+    "securitySchemes": {
+      "OAuth2": {
+        "type": "oauth2",
+        "flows": {
+          "password": {
+            "tokenUrl": "https://localhost:8081/oauth/token",
+            "scopes": {}
+          }
+        }
+      },
+      "api_key": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header"
+      }
+    }
+  }
 }
