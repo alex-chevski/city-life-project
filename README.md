@@ -112,4 +112,4 @@ Run development analyzeer psalm
 
 ### Author
 
-- **[frostep](https://github.com/frostep)**
+- **[alex-chevski](https://github.com/alex-chevski)**
